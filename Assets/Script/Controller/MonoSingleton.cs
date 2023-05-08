@@ -7,7 +7,7 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
     private static T instance;
     public static T Instance { get { return instance; } }
 
-    private void Awake()
+    protected void Awake()
     {
         if (instance != null)
         {

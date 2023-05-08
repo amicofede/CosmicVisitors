@@ -1,18 +1,60 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VisitorController : MonoBehaviour
+public class VisitorController : MonoSingleton<VisitorController>
 {
-    // Start is called before the first frame update
-    void Start()
+    private Visitor[] visitors;
+    private Vector2 direction;
+    private float speed = 3;
+    private float moveDownOverTime = 0.2f;
+
+    #region UnityMessages
+    private void Awake()
     {
-        
+        visitors = GetComponentsInChildren<Visitor>();
+        direction = Vector2.right;
+    }
+    private void OnEnable()
+    {
+        EventController.OnVisitorHitBounds += ChangeDirection;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        
+        EventController.OnVisitorHitBounds -= ChangeDirection;
     }
+
+    private void FixedUpdate()
+    {
+        for (int i = 0; i < visitors.Length; i++)
+        {
+            if (!visitors[i].gameObject.activeInHierarchy) continue;
+
+            visitors[i].Move(direction, speed * Time.fixedDeltaTime);
+        }
+    }
+    #endregion
+
+    public void ChangeDirection(bool _hitBounds)
+    {
+        StartCoroutine(MoveTransition(_hitBounds));
+    }
+
+    private IEnumerator MoveTransition(bool _hitBounds)
+    {
+        direction = Vector2.down;
+        yield return new WaitForSeconds(moveDownOverTime / speed);
+        if (_hitBounds)
+        {
+            direction = Vector2.left;
+        }
+        else
+        {
+            direction = Vector2.right;
+        }
+    }
+
+
 }
