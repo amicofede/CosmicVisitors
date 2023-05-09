@@ -23,8 +23,8 @@ public class GameController : MonoSingleton<GameController>
     #region UnityMessages
     private void Awake()
     {
-        Instantiate(playerPrefab, new Vector3(0f,1.5f,0f), Quaternion.Euler(0f,0f,90f));
         base.Awake();
+        Instantiate(playerPrefab, new Vector3(0f,1.5f,0f), Quaternion.Euler(0f,0f,90f));
         Score = 0;
     }
 
