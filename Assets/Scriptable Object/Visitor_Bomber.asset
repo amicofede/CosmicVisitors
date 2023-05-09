@@ -18,4 +18,5 @@ MonoBehaviour:
   damageAnimator: {fileID: 9100000, guid: eb49571ab425e1143965f1af5678bd50, type: 2}
   destroyAnimator: {fileID: 9100000, guid: c4293a2f0060a8840ba85e46b50a79ff, type: 2}
   boostAnimator: {fileID: 9100000, guid: 30b2b84858ee857459b79a768a8f4206, type: 2}
-  ReturnFirePrefab: {fileID: 6779191691929089500, guid: 50b07738ccc79224caf4afdcf549396a, type: 3}
+  shootAnimator: {fileID: 9100000, guid: 4e40326b214000649b105f4bc6b450bb, type: 2}
+  ReturnFirePrefab: {fileID: 6779191691929089500, guid: e0627a2111aead849b6d1f2755f56459, type: 3}

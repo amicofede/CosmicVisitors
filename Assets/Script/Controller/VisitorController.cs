@@ -1,23 +1,25 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class VisitorController : MonoSingleton<VisitorController>
 {
+
     public List<GameObject> visitorPrefab;
     public Visitor[] visitors;
     private Vector2 direction;
-    private float speed = 3;
-    private float moveDownOverTime = 0.2f;
+    private float speed = 1;
+    private float moveDownOverTime = 0.5f;
 
-    public const char ALIEN_TILE = '#';
-    public const char EMPTY_TILE = '-';
+    public const char VisitorShip = '#';
+    public const char EmptyShip = '-';
 
-    private string[] AlienData = new string[]
+    private string[] VisitorData = new string[]
         {
             "-------",
             "--####-",
-            "-###---",
+            "-###-#-",
             "--####-",
             "-###---",
             "--#--#-",
@@ -30,7 +32,8 @@ public class VisitorController : MonoSingleton<VisitorController>
         base.Awake();
         visitors = GetComponentsInChildren<Visitor>();
         direction = Vector2.right;
-        BuildMonsterArmy();
+        BuildVisitorArmy();
+        StartCoroutine(ReturnFire());
     }
     private void OnEnable()
     {
@@ -42,7 +45,7 @@ public class VisitorController : MonoSingleton<VisitorController>
     }
     private void FixedUpdate()
     {
-        for (int i = 0; i < visitorPrefab.Count; i++)
+        for (int i = 0; i < visitors.Length; i++)
         {
             if (!visitors[i].gameObject.activeInHierarchy) continue;
 
@@ -50,12 +53,10 @@ public class VisitorController : MonoSingleton<VisitorController>
         }
     }
     #endregion
-
     public void ChangeDirection(bool _hitBounds)
     {
         StartCoroutine(MoveTransition(_hitBounds));
     }
-
     private IEnumerator MoveTransition(bool _hitBounds)
     {
         direction = Vector2.down;
@@ -70,30 +71,53 @@ public class VisitorController : MonoSingleton<VisitorController>
         }
     }
 
-    private void SpawnAlien(int _r, int _c)
+    private void BuildVisitorArmy()
     {
-        GameObject Alien = Instantiate(visitorPrefab[Random.Range(0, visitorPrefab.Count)], new Vector2(_c - 3, (((AlienData.Length - 1) - _r)*1.5f) + 7.5f), Quaternion.Euler(0f, 0f, -90f), this.transform);
-
-    }
-
-    private void BuildMonsterArmy()
-    {
-        for (int r = 0; r < AlienData.Length; r++)
+        for (int r = 0; r < VisitorData.Length; r++)
         {
-            for (int c = 0; c < AlienData[r].Length; c++)
+            for (int c = 0; c < VisitorData[r].Length; c++)
             {
-                switch (AlienData[r][c])
+                switch (VisitorData[r][c])
                 {
-                    case EMPTY_TILE:
+                    case EmptyShip:
                         continue;
 
-                    case ALIEN_TILE:
-                        SpawnAlien(r, c);
+                    case VisitorShip:
+                        Array.Resize(ref visitors, visitors.Length + 1);
+                        GameObject VisitorObj = Instantiate(visitorPrefab[UnityEngine.Random.Range(0, visitorPrefab.Count)], new Vector2(c - 3, (((VisitorData.Length - 1) - r)*1.5f) + 7.5f), Quaternion.Euler(0f, 0f, -90f), this.transform);
+                        visitors[visitors.Length - 1] = VisitorObj.gameObject.GetComponent<Visitor>();
                         break;
                 }
             }
         }
     }
 
+    private IEnumerator ReturnFire()
+    {
+        int fireRate = 30;
+        while (IsOneVisitorActive())
+        {
+            yield return new WaitForSeconds(UnityEngine.Random.Range(1,3));
+            for (int i = 0; i < visitors.Length; i++)
+            {
+                if (!visitors[i].gameObject.activeInHierarchy) continue;
+                if (UnityEngine.Random.Range(1,100) < fireRate)
+                {
+                    visitors[i].OnShoot();
+                }
+            }
+        }
+    }
+
+    private bool IsOneVisitorActive()
+    {
+        for (int i = 0; i < visitors.Length; i++)
+        {
+            if (visitors[i].gameObject.activeInHierarchy)
+                return true;
+
+        }
+        return false;
+    }
 
 }

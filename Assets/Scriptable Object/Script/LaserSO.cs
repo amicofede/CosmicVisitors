@@ -8,7 +8,6 @@ public class LaserSO : ScriptableObject
     public Sprite itemSprite;
 
     public float Speed;
-    public int Damage;
     public Vector2 Direction;
 
     public bool canBounce;

@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 3448406648635289465}
   - component: {fileID: 2298607508463925703}
   - component: {fileID: 2139204090883698855}
-  m_Layer: 9
-  m_Name: Laser
+  m_Layer: 8
+  m_Name: ReturnFireBomber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1d20a86c91f99ca4398ae022e7396abb, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_Size: {x: 0.46, y: 0.46}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &3448406648635289465
@@ -123,7 +123,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.46, y: 0.46}
+    oldSize: {x: 0.18, y: 0.18}
     newSize: {x: 0.46, y: 0.46}
     adaptiveTilingThreshold: 0.5
     drawMode: 2
@@ -171,5 +171,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8be364d04eae0ea4ba557e7d1e1dab03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laserData: {fileID: 11400000, guid: dd44ff17803863548b70fd94f30532fd, type: 2}
+  laserData: {fileID: 11400000, guid: 73f6a77a787fba348bd01af27e44da38, type: 2}
   spriteRenderer: {fileID: 0}

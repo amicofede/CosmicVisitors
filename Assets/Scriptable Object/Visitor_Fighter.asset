@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b298e9fda45ca343955513f324ab900, type: 3}
   m_Name: Visitor_Fighter
   m_EditorClassIdentifier: 
-  initialLifePoint: 3
+  initialLifePoint: 2
   itemSprite: {fileID: 21300000, guid: 0c25d5f53fd8e014b83d3fe77a5aa02a, type: 3}
   moveAnimator: {fileID: 9100000, guid: 05b18b77c0922534c9a2e87918e5dd65, type: 2}
   damageAnimator: {fileID: 9100000, guid: 6a022935c0b87f647990eefd448deb97, type: 2}
   destroyAnimator: {fileID: 9100000, guid: 28e43675d8703694ab3470c82be9b639, type: 2}
   boostAnimator: {fileID: 9100000, guid: ff20b0c9b8109ac4c9f82aa482276e2a, type: 2}
-  ReturnFirePrefab: {fileID: 6779191691929089500, guid: 50b07738ccc79224caf4afdcf549396a, type: 3}
+  shootAnimator: {fileID: 9100000, guid: 00bd2bce5a5b3cf4a9dbc55c4d29c2bd, type: 2}
+  ReturnFirePrefab: {fileID: 6779191691929089500, guid: dfc99cc0a0cd4a8448bd008da5e16e22, type: 3}

@@ -1,7 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -19,12 +16,14 @@ public class Visitor : MonoBehaviour, IDamageable
     private SpriteRenderer spriteRenderer;
     private Animator animator;
 
+    private Vector2 direction;
     private int lifePoint;
 
 
     #region UnityMessages
     private void Awake()
     {
+        this.GetComponent<BoxCollider2D>().enabled = true;
         lifePoint = DataSO.initialLifePoint;
         trans = gameObject.transform;
         rigidBody = GetComponent<Rigidbody2D>();
@@ -37,36 +36,61 @@ public class Visitor : MonoBehaviour, IDamageable
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.GetComponent<Laser>())
-        {
-            lifePoint--;
-            if (lifePoint <= 0)
+            if (collision.collider.gameObject.GetComponent<Laser>())
             {
-                EventController.VisitorKilled();
-                animator.runtimeAnimatorController = DataSO.destroyAnimator;
-                StartCoroutine(SetActiveVisitor());
-                //Destroy(gameObject);
+                if (lifePoint <= 0)
+                {
+                    this.GetComponent<BoxCollider2D>().enabled = false;
+                    EventController.VisitorKilled();
+                    animator.runtimeAnimatorController = DataSO.destroyAnimator;
+                    StartCoroutine(SetActiveVisitor());
+                    //Destroy(gameObject);
+                }
+                else if (lifePoint <= DataSO.initialLifePoint)
+                {
+                    lifePoint--;
+                    animator.runtimeAnimatorController = DataSO.damageAnimator;
+                }
             }
-            else if (lifePoint < DataSO.initialLifePoint)
+            else if (collision.collider.gameObject.GetComponent<ArenaController>())
             {
-                animator.runtimeAnimatorController = DataSO.damageAnimator;
+                EventController.VisitorHitBounds(trans.position.x > 0);
             }
-        }
-        else if (collision.collider.gameObject.GetComponent<ArenaController>())
-        {
-            EventController.VisitorHitBounds(trans.position.x > 0);
-        }
     }
     #endregion
-
     IEnumerator SetActiveVisitor()
     {
         yield return new WaitForSeconds(this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
         gameObject.SetActive(false);
     }
 
+    #region Move
+
     public void Move(Vector2 _direction, float _magnitude)
     {
-        rigidBody.MovePosition(trans.position + (Vector3)_direction * _magnitude);
+        direction = _direction;
+        rigidBody.MovePosition(trans.position + (Vector3)direction * _magnitude);
     }
+    #endregion
+
+
+    #region Shoot
+    public void OnShoot()
+    {
+        animator.runtimeAnimatorController = DataSO.shootAnimator;
+        StartCoroutine(SpawnReturnFire());
+    }
+
+    private IEnumerator SpawnReturnFire()
+    {
+        yield return new WaitForSeconds(this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length);
+        Instantiate(DataSO.ReturnFirePrefab, cannonSx.transform.position, Quaternion.Euler(0f, 0f, -90f));
+        Instantiate(DataSO.ReturnFirePrefab, cannonDx.transform.position, Quaternion.Euler(0f, 0f, -90f));
+        if (lifePoint != DataSO.initialLifePoint)
+        {
+            animator.runtimeAnimatorController = DataSO.damageAnimator;
+        }
+         animator.runtimeAnimatorController = DataSO.moveAnimator;
+    }
+    #endregion
 }
