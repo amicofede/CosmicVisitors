@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 707441414271464099}
   - component: {fileID: 1705568346988807108}
-  - component: {fileID: -9121676310862536825}
   - component: {fileID: 6581235252545336172}
   - component: {fileID: 5622468288815802206}
   - component: {fileID: 7327010019954046954}
+  - component: {fileID: -2553868294886488290}
   m_Layer: 6
   m_Name: VisitorFighter
   m_TagString: Untagged
@@ -90,27 +90,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &-9121676310862536825
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3258417975015349655}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!50 &6581235252545336172
 Rigidbody2D:
   serializedVersion: 4
@@ -198,6 +177,27 @@ MonoBehaviour:
   DataSO: {fileID: 11400000, guid: 1f2efa489bd362147873e943e26014cd, type: 2}
   cannonDx: {fileID: 6958502253773627200}
   cannonSx: {fileID: 2354958848085217701}
+--- !u!95 &-2553868294886488290
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3258417975015349655}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 05b18b77c0922534c9a2e87918e5dd65, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8669079471902322531
 GameObject:
   m_ObjectHideFlags: 0

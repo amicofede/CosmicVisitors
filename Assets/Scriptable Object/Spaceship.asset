@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af01d36a765e6a644a27d9dbca92948b, type: 3}
   m_Name: Spaceship
   m_EditorClassIdentifier: 
+  initialLifePoint: 4
   Speed: 3
   itemSprite: {fileID: 21300000, guid: 0c4216355e8aed947bb87492318966e8, type: 3}
   moveAction:
@@ -64,5 +65,4 @@ MonoBehaviour:
       m_Action: Shoot
       m_Flags: 0
     m_Flags: 0
-  moveAnimator: {fileID: 9100000, guid: b59e4849312dfd44f9cda9305cc0e992, type: 2}
   LaserPrefab: {fileID: 6779191691929089500, guid: 50b07738ccc79224caf4afdcf549396a, type: 3}

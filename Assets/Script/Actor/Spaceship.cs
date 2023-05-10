@@ -17,8 +17,10 @@ public class Spaceship : MonoBehaviour, IDamageable
     private Transform trans;
     private Rigidbody2D rigidBody;
     private SpriteRenderer spriteRenderer;
-    private Animator animator;
     private IEnumerator moveCoroutine;
+
+    [SerializeField] private int lifePoint;
+    [SerializeField] private float speed;
 
 
 
@@ -28,13 +30,16 @@ public class Spaceship : MonoBehaviour, IDamageable
         trans = gameObject.transform;
         rigidBody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
+
+        lifePoint = DataSO.initialLifePoint;
+        EventController.RaiseOnLivesChanged(lifePoint);
 
         spriteRenderer.sprite = DataSO.itemSprite;
-        animator.runtimeAnimatorController = DataSO.moveAnimator;
     }
     private void OnEnable()
     {
+        EventController.SpaceshipAnimationStarted += DataSO.DisableInputs;
+        EventController.SpaceshipAnimationFinished += DataSO.EnableInputs;
         DataSO.moveAction.started += OnMoveStarted;
         DataSO.moveAction.canceled += OnMoveFinished;
         DataSO.shootAction.started += OnShoot;
@@ -42,8 +47,28 @@ public class Spaceship : MonoBehaviour, IDamageable
 
     private void OnDisable()
     {
+        EventController.SpaceshipAnimationStarted -= DataSO.DisableInputs;
+        EventController.SpaceshipAnimationFinished -= DataSO.EnableInputs;
         DataSO.moveAction.started -= OnMoveStarted;
         DataSO.moveAction.canceled -= OnMoveFinished;
+        DataSO.shootAction.started -= OnShoot;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.gameObject.GetComponent<Laser>())
+        {
+            if (lifePoint <= 1)
+            {
+                Time.timeScale = 0;
+                //Destroy(gameObject);
+            }
+            else if (lifePoint <= DataSO.initialLifePoint)
+            {
+                lifePoint--;
+                EventController.RaiseOnLivesChanged(lifePoint);
+            }
+        }
     }
     #endregion
 

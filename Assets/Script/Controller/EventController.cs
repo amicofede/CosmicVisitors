@@ -5,22 +5,88 @@ using UnityEngine;
 
 public class EventController : MonoSingleton<EventController>
 {
-    public static event Action OnVisitorKilled;
-    public static event Action<bool> OnVisitorHitBounds;
-    public static event Action<int> OnScoreChanged;
+    public static event Action VisitorKilled;
+    public static event Action<bool> VisitorHitBounds;
+    public static event Action BuildVisitorArmy;
 
-    public static void VisitorKilled()
-    {
-        OnVisitorKilled?.Invoke();
-    }
+    public static event Action SpaceshipAnimationStarted;
+    public static event Action SpaceshipAnimationFinished;
 
-    public static void ScoreChanged(int _score)
-    {
-        OnScoreChanged?.Invoke(_score);
-    }
+    public static event Action<int> ScoreChanged;
+    public static event Action<int> LivesChanged;
 
-    public static void VisitorHitBounds(bool _hitBounds)
+    public static event Action GameStart;
+    public static event Action ResumeGame;
+    public static event Action GameOver;
+    public static event Action PauseGame;
+    public static event Action ResetGame;
+
+    public static event Action LevelCleared;
+
+    #region Visitor
+    public static void RaiseOnVisitorKilled()
     {
-        OnVisitorHitBounds?.Invoke(_hitBounds);
+        VisitorKilled?.Invoke();
     }
+    public static void RaiseOnBuildVisitorArmy()
+    {
+        BuildVisitorArmy?.Invoke();
+    }
+    public static void RaiseOnVisitorHitBounds(bool _hitBounds)
+    {
+        VisitorHitBounds?.Invoke(_hitBounds);
+    }
+    #endregion
+
+    #region Player
+    public static void RaiseOnSpaceshipAnimationStarted()
+    {
+        SpaceshipAnimationStarted?.Invoke();
+    }
+    public static void RaiseOnSpaceshipAnimationFinished()
+    {
+        SpaceshipAnimationFinished?.Invoke();
+    }
+    #endregion
+
+    #region UI
+    public static void RaiseOnScoreChanged(int _score)
+    {
+        ScoreChanged?.Invoke(_score);
+    }
+    public static void RaiseOnLivesChanged(int _lives)
+    {
+        LivesChanged?.Invoke(_lives);
+    }
+    #endregion
+
+    #region Game Flow
+    public static void RaiseOnGameStart()
+    {
+        GameStart?.Invoke();
+    }
+    public static void RaiseOnResumeGame()
+    {
+        ResumeGame?.Invoke();
+    }
+    public static void RaiseOnGameOver()
+    {
+        GameOver?.Invoke();
+    }
+    public static void RaiseOnPauseGame()
+    {
+        PauseGame?.Invoke();
+    }
+    public static void RaiseOnResetGame()
+    {
+        ResetGame?.Invoke();
+    }
+    #endregion
+
+    #region StageGeneration
+    public static void RaiseOnLevelCleared()
+    {
+        LevelCleared?.Invoke();
+    }
+    #endregion
 }

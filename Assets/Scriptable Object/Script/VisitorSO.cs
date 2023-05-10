@@ -9,11 +9,5 @@ public class VisitorSO : ScriptableObject
 
     public Sprite itemSprite;
 
-    public RuntimeAnimatorController moveAnimator;
-    public RuntimeAnimatorController damageAnimator;
-    public RuntimeAnimatorController destroyAnimator;
-    public RuntimeAnimatorController boostAnimator;
-    public RuntimeAnimatorController shootAnimator;
-
     public GameObject ReturnFirePrefab;
 }
