@@ -38,6 +38,7 @@ public class Visitor : MonoBehaviour, IDamageable
                 if (lifePoint <= 0)
                 {
                     EventController.RaiseOnVisitorKilled();
+                gameObject.GetComponentInParent<VisitorController>().OnVisitorKilled(this.gameObject);
                     gameObject.SetActive(false);
                     //Destroy(gameObject);
                 }

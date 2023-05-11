@@ -508,7 +508,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 600, y: 800}
+  m_SizeDelta: {x: 1000, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &567933264
 MonoBehaviour:
@@ -539,7 +539,7 @@ MonoBehaviour:
     Use the D key to move left.
 
     Use the Spacebar
-    to shoot against your enemy.
+    to kill your enemy.
 
 
     Complete 3 stages and win the Boss fight!'
@@ -941,6 +941,9 @@ MonoBehaviour:
   - {fileID: 6880594796690449441, guid: ebd5995c793080d4fbf0b761f4715b22, type: 3}
   - {fileID: 3258417975015349655, guid: da0793e2b015d364492c2b2e4da1882f, type: 3}
   visitors: []
+  activeVisitors: []
+  initialSpeed: 4
+  speed: 0
 --- !u!1 &883144511
 GameObject:
   m_ObjectHideFlags: 0

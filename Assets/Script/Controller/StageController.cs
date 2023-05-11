@@ -11,16 +11,16 @@ public class StageController : MonoSingleton<StageController>
     #region UnityMessages
     private void OnEnable()
     {
-        EventController.LevelCleared += OnLevelCleared;
+        EventController.GenerateLevel += OnGenerateLevel;
     }
 
     private void OnDisable()
     {
-        EventController.LevelCleared -= OnLevelCleared;
+        EventController.GenerateLevel -= OnGenerateLevel;
     }
     #endregion
 
-    public void OnLevelCleared()
+    public void OnGenerateLevel()
     {
         level++;
         switch (level)

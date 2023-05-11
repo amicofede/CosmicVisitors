@@ -21,6 +21,8 @@ public class Spaceship : MonoBehaviour, IDamageable
 
     [SerializeField] private int lifePoint;
     [SerializeField] private float speed;
+    [SerializeField] private bool shooted;
+    [SerializeField] private float shootTimer;
 
 
 
@@ -31,6 +33,9 @@ public class Spaceship : MonoBehaviour, IDamageable
         rigidBody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
+        shooted = false;
+        shootTimer = 0.5f;
+        speed = DataSO.Speed;
         lifePoint = DataSO.initialLifePoint;
         EventController.RaiseOnLivesChanged(lifePoint);
 
@@ -86,24 +91,38 @@ public class Spaceship : MonoBehaviour, IDamageable
         moveCoroutine = null;
     }
 
+    #endregion
+
+    #region Shoot
+    private void OnShoot(InputAction.CallbackContext context)
+    {
+        if (!shooted)
+        {
+            Instantiate(DataSO.LaserPrefab, cannonSx.transform.position, Quaternion.Euler(0f,0f,90f));
+            Instantiate(DataSO.LaserPrefab, cannonDx.transform.position, Quaternion.Euler(0f, 0f, 90f));
+            shooted = true;
+            StartCoroutine(shootCD());
+        }
+    }
+    #endregion
+
+    #region Coroutine
+    private IEnumerator shootCD()
+    {
+        yield return new WaitForSeconds(shootTimer);
+        shooted = false;
+    }
     private IEnumerator OnMove(float _input)
     {
         while (true)
         {
             yield return new WaitForFixedUpdate();
             Vector2 direction = Vector2.right * _input;
-            float movementMagnitude = DataSO.Speed * Time.fixedDeltaTime;
+            float movementMagnitude = speed * Time.fixedDeltaTime;
 
             rigidBody.MovePosition(transform.position + (Vector3)direction * movementMagnitude);
         }
     }
     #endregion
 
-    #region Shoot
-    private void OnShoot(InputAction.CallbackContext context)
-    {
-        Instantiate(DataSO.LaserPrefab, cannonSx.transform.position, Quaternion.Euler(0f,0f,90f));
-        Instantiate(DataSO.LaserPrefab, cannonDx.transform.position, Quaternion.Euler(0f, 0f, 90f));
-    }
-    #endregion
 }

@@ -6,6 +6,8 @@ using UnityEngine;
 public class EventController : MonoSingleton<EventController>
 {
     public static event Action VisitorKilled;
+    public static event Action VisitorAnimationStarted;
+    public static event Action VisitorAnimationFinished;
     public static event Action<bool> VisitorHitBounds;
     public static event Action BuildVisitorArmy;
 
@@ -21,12 +23,20 @@ public class EventController : MonoSingleton<EventController>
     public static event Action PauseGame;
     public static event Action ResetGame;
 
-    public static event Action LevelCleared;
+    public static event Action GenerateLevel;
 
     #region Visitor
     public static void RaiseOnVisitorKilled()
     {
         VisitorKilled?.Invoke();
+    }
+    public static void RaiseOnVisitorAnimationStarted()
+    {
+        VisitorAnimationStarted?.Invoke();
+    }
+    public static void RaiseOnVisitorAnimationFinished()
+    {
+        VisitorAnimationFinished?.Invoke();
     }
     public static void RaiseOnBuildVisitorArmy()
     {
@@ -84,9 +94,9 @@ public class EventController : MonoSingleton<EventController>
     #endregion
 
     #region StageGeneration
-    public static void RaiseOnLevelCleared()
+    public static void RaiseOnGenerateLevel()
     {
-        LevelCleared?.Invoke();
+        GenerateLevel?.Invoke();
     }
     #endregion
 }

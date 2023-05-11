@@ -15,6 +15,11 @@ public class UIController : MonoSingleton<UIController>
     [SerializeField] private List<GameObject> LifeIcons = new List<GameObject>();
 
     #region UnityMessages
+    private new void Awake()
+    {
+        base.Awake();
+        StartMenu();
+    }
     private void OnEnable()
     {
         EventController.ScoreChanged += OnScoreChanged;

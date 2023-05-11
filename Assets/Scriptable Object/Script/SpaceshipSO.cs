@@ -18,12 +18,12 @@ public class SpaceshipSO : ScriptableObject
     #region UnityMessages
     private void OnEnable()
     {
-        EnableInputs();
+
     }
 
     private void OnDisable()
     {
-        DisableInputs();
+
     }
 
     #endregion
