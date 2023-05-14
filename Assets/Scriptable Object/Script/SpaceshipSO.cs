@@ -10,33 +10,6 @@ public class SpaceshipSO : ScriptableObject
     public float Speed;
 
     public Sprite itemSprite;
-    public InputAction moveAction;
-    public InputAction shootAction;
 
     public GameObject LaserPrefab;
-
-    #region UnityMessages
-    private void OnEnable()
-    {
-
-    }
-
-    private void OnDisable()
-    {
-
-    }
-
-    #endregion
-
-    public void EnableInputs()
-    {
-        moveAction.Enable();
-        shootAction.Enable();
-    }
-    public void DisableInputs()
-    {
-        moveAction.Disable();
-        shootAction.Disable();
-    }
-
 }

@@ -13,8 +13,8 @@ public class ArenaController : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
-        halfCameraHeight = Camera.main.orthographicSize;
-        halfCameraWidth = Camera.main.orthographicSize * Camera.main.aspect;
+        halfCameraHeight = mainCamera.orthographicSize;
+        halfCameraWidth = mainCamera.orthographicSize * mainCamera.aspect;
         edgeCollider = GetComponent<EdgeCollider2D>();
 
         Vector2[] points =

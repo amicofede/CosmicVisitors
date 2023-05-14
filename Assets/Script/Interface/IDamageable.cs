@@ -1,5 +1,5 @@
 public interface IDamageable
 {
-    //void OnKill();
-    //void TakeDamage();
+    void OnKill();
+    void OnTakeDamage();
 }

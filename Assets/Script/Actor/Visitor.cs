@@ -22,7 +22,7 @@ public class Visitor : MonoBehaviour, IDamageable
     #region UnityMessages
     private void Awake()
     {
-        this.GetComponent<BoxCollider2D>().enabled = true;
+        gameObject.GetComponent<BoxCollider2D>().enabled = true;
         lifePoint = DataSO.initialLifePoint;
         trans = gameObject.transform;
         rigidBody = GetComponent<Rigidbody2D>();
@@ -35,17 +35,7 @@ public class Visitor : MonoBehaviour, IDamageable
     {
             if (collision.collider.gameObject.GetComponent<Laser>())
             {
-                if (lifePoint <= 0)
-                {
-                    EventController.RaiseOnVisitorKilled();
-                gameObject.GetComponentInParent<VisitorController>().OnVisitorKilled(this.gameObject);
-                    gameObject.SetActive(false);
-                    //Destroy(gameObject);
-                }
-                else if (lifePoint <= DataSO.initialLifePoint)
-                {
-                    lifePoint--;
-                }
+                 OnTakeDamage();
             }
             else if (collision.collider.gameObject.GetComponent<ArenaController>())
             {
@@ -70,5 +60,25 @@ public class Visitor : MonoBehaviour, IDamageable
         Instantiate(DataSO.ReturnFirePrefab, cannonDx.transform.position, Quaternion.Euler(0f, 0f, -90f));
     }
 
+    #endregion
+
+    #region Interface Method
+    public void OnTakeDamage()
+    {
+        lifePoint--;
+        if (lifePoint <= 0)
+        {
+
+            OnKill();
+        }
+    }
+
+    public void OnKill()
+    {
+        EventController.RaiseOnVisitorKilled();
+        gameObject.GetComponentInParent<VisitorController>().OnVisitorKilled(gameObject);
+        gameObject.SetActive(false);
+        //Destroy(gameObject);
+    }
     #endregion
 }

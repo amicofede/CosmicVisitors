@@ -9,40 +9,52 @@ public class UIController : MonoSingleton<UIController>
     public GameObject playingUI;
     public GameObject gameOverUI;
     public GameObject pauseMenuUI;
-    public GameObject winUI;
+    public GameObject stageCompleteUI;
 
-    [SerializeField] private TextMeshProUGUI scoreVisitor;
+    [SerializeField] private TextMeshProUGUI score;
+    [SerializeField] private TextMeshProUGUI stageComplete;
+    [SerializeField] private TextMeshProUGUI gameOverStatistics;
+
     [SerializeField] private List<GameObject> LifeIcons = new List<GameObject>();
 
     #region UnityMessages
     private new void Awake()
     {
         base.Awake();
-        StartMenu();
+        StartMenuUI();
     }
     private void OnEnable()
     {
         EventController.ScoreChanged += OnScoreChanged;
         EventController.LivesChanged += OnLivesChanged;
-        EventController.ResetGame += StartMenu;
-        EventController.ResumeGame += Playing;
-        EventController.GameOver += GameOver;
+        EventController.RestartGameUI += StartMenuUI;
+        EventController.ResumeGameUI += PlayingUI;
+        EventController.GameOverUI += GameOverUI;
+        EventController.StageCompleteUI += StageCompleteUI;
+        EventController.PauseGameUI += PauseMenuUI;
+        EventController.RestartGameUI += StartMenuUI;
+        EventController.PlayingUI += PlayingUI;
     }
 
     private void OnDisable()
     {
         EventController.ScoreChanged -= OnScoreChanged;
         EventController.LivesChanged -= OnLivesChanged;
-        EventController.ResetGame -= StartMenu;
-        EventController.ResumeGame -= Playing;
-        EventController.GameOver -= GameOver;
+        EventController.RestartGameUI -= StartMenuUI;
+        EventController.ResumeGameUI -= PlayingUI;
+        EventController.GameOverUI -= GameOverUI;
+        EventController.StageCompleteUI -= StageCompleteUI;
+        EventController.PauseGameUI -= PauseMenuUI;
+        EventController.RestartGameUI -= StartMenuUI;
+        EventController.PlayingUI -= PlayingUI;
+
     }
     #endregion
 
     #region Delegates
     private void OnScoreChanged(int _score)
     {
-        scoreVisitor.text = "Score: " + _score.ToString();
+        score.text = "Score: " + _score.ToString();
     }
     private void OnLivesChanged(int _lives)
     {
@@ -54,45 +66,49 @@ public class UIController : MonoSingleton<UIController>
     #endregion
 
     #region UI Menù
-    private void StartMenu()
+    private void StartMenuUI()
     {
         startMenuUI.SetActive(true);
         playingUI.SetActive(false);
         gameOverUI.SetActive(false);
         pauseMenuUI.SetActive(false);
-        winUI.SetActive(false);
+        stageCompleteUI.SetActive(false);
     }
-    private void Playing()
+    private void PlayingUI()
     {
         startMenuUI.SetActive(false);
         playingUI.SetActive(true);
         gameOverUI.SetActive(false);
         pauseMenuUI.SetActive(false);
-        winUI.SetActive(false);
+        stageCompleteUI.SetActive(false);
     }
-    private void GameOver()
+    private void GameOverUI()
     {
         startMenuUI.SetActive(false);
         playingUI.SetActive(false);
         gameOverUI.SetActive(true);
         pauseMenuUI.SetActive(false);
-        winUI.SetActive(false);
+        stageCompleteUI.SetActive(false);
+        gameOverStatistics.text = "Your reach the Stage n. " + StageController.Instance.Level + "."+
+                                  "\nYour total Score is " + GameManager.Instance.Score + ".";
+
     }
-    private void PauseMenu()
+    private void PauseMenuUI()
     {
         startMenuUI.SetActive(false);
         playingUI.SetActive(true);
         gameOverUI.SetActive(false);
         pauseMenuUI.SetActive(true);
-        winUI.SetActive(false);
+        stageCompleteUI.SetActive(false);
     }
-    private void Win()
+    private void StageCompleteUI()
     {
         startMenuUI.SetActive(false);
         playingUI.SetActive(false);
         gameOverUI.SetActive(false);
         pauseMenuUI.SetActive(false);
-        winUI.SetActive(true);
+        stageCompleteUI.SetActive(true);
+        stageComplete.text = "Stage " + StageController.Instance.Level + "\nComplete!";
     }
     #endregion
 }

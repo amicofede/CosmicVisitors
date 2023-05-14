@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class EventController : MonoSingleton<EventController>
 {
@@ -11,19 +12,32 @@ public class EventController : MonoSingleton<EventController>
     public static event Action<bool> VisitorHitBounds;
     public static event Action BuildVisitorArmy;
 
+    public static event Action SpaceshipSpawn;
     public static event Action SpaceshipAnimationStarted;
     public static event Action SpaceshipAnimationFinished;
+    public static event Action SpaceshipDisableInput;
+    public static event Action SpaceshipEnableInput;
+    public static event Action<InputAction.CallbackContext> SpaceshipMoveStarted;
+    public static event Action<InputAction.CallbackContext> SpaceshipMoveFinished;
+    public static event Action<InputAction.CallbackContext> SpaceshipShoot;
+    public static event Action<InputAction.CallbackContext> SpaceshipShield;
+
 
     public static event Action<int> ScoreChanged;
     public static event Action<int> LivesChanged;
 
-    public static event Action GameStart;
-    public static event Action ResumeGame;
-    public static event Action GameOver;
-    public static event Action PauseGame;
-    public static event Action ResetGame;
 
-    public static event Action GenerateLevel;
+    public static event Action GameStartUI;
+    public static event Action ResumeGameUI;
+    public static event Action GameOverUI;
+    public static event Action PauseGameUI;
+    public static event Action RestartGameUI;
+    public static event Action StageCompleteUI;
+    public static event Action PlayingUI;
+
+    public static event Action GenerateStage;
+    public static event Action StageCleared;
+
 
     #region Visitor
     public static void RaiseOnVisitorKilled()
@@ -48,14 +62,46 @@ public class EventController : MonoSingleton<EventController>
     }
     #endregion
 
-    #region Player
+    #region SpaceShip
+    public static void RaiseOnSpaceshipEnableInput()
+    {
+        SpaceshipEnableInput?.Invoke();
+    }
+
+    public static void RaiseOnSpaceshipDisableInput()
+    {
+        SpaceshipDisableInput?.Invoke();
+    }
+    public static void RaiseOnSpaceshipSpawn()
+    {
+        SpaceshipSpawn?.Invoke();
+    }
+
     public static void RaiseOnSpaceshipAnimationStarted()
     {
         SpaceshipAnimationStarted?.Invoke();
     }
+
     public static void RaiseOnSpaceshipAnimationFinished()
     {
         SpaceshipAnimationFinished?.Invoke();
+    }
+
+    public static void RaiseOnSpaceshipMoveStarted(InputAction.CallbackContext _context)
+    {
+        SpaceshipMoveStarted?.Invoke(_context);
+    }
+    public static void RaiseOnSpaceshipMoveFinished(InputAction.CallbackContext _context)
+    {
+        SpaceshipMoveFinished?.Invoke(_context);
+    }
+    public static void RaiseOnSpaceshipShoot(InputAction.CallbackContext _context)
+    {
+        SpaceshipShoot?.Invoke(_context);
+    }
+    public static void RaiseOnSpaceshipShield(InputAction.CallbackContext _context)
+    {
+        SpaceshipShield?.Invoke(_context);
     }
     #endregion
 
@@ -71,32 +117,45 @@ public class EventController : MonoSingleton<EventController>
     #endregion
 
     #region Game Flow
-    public static void RaiseOnGameStart()
+    public static void RaiseOnGameStartUI()
     {
-        GameStart?.Invoke();
+        GameStartUI?.Invoke();
     }
-    public static void RaiseOnResumeGame()
+    public static void RaiseOnResumeGameUI()
     {
-        ResumeGame?.Invoke();
+        ResumeGameUI?.Invoke();
     }
-    public static void RaiseOnGameOver()
+    public static void RaiseOnGameOverUI()
     {
-        GameOver?.Invoke();
+        GameOverUI?.Invoke();
     }
-    public static void RaiseOnPauseGame()
+    public static void RaiseOnPauseGameUI()
     {
-        PauseGame?.Invoke();
+        PauseGameUI?.Invoke();
     }
-    public static void RaiseOnResetGame()
+    public static void RaiseOnRestartGameUI()
     {
-        ResetGame?.Invoke();
+        RestartGameUI?.Invoke();
+    }
+    public static void RaiseOnStageCompleteUI()
+    {
+        StageCompleteUI?.Invoke();
+    }
+    public static void RaiseOnPlayingUI()
+    {
+        PlayingUI?.Invoke();
     }
     #endregion
 
     #region StageGeneration
-    public static void RaiseOnGenerateLevel()
+    public static void RaiseOnGenerateStage()
     {
-        GenerateLevel?.Invoke();
+        GenerateStage?.Invoke();
+    }
+
+    public static void RaiseOnStageCleared()
+    {
+        StageCleared?.Invoke();
     }
     #endregion
 }

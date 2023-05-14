@@ -5,16 +5,16 @@ using UnityEngine;
 public class GameManager : MonoSingleton<GameManager>
 {
     private int score;
-    public GameObject playerPrefab;
+    public GameObject SpaceshipPrefab;
 
     public enum State
     {
         None = -1,
         Playing,
         Pause,
+        StageComplete,
         GameOver,
     }
-
     private State gameState;
     public State GameState
     {
@@ -23,15 +23,15 @@ public class GameManager : MonoSingleton<GameManager>
         {
             switch (value)
             {
-                case State.None: { EventController.RaiseOnGameStart(); break; }
-                case State.Playing: { ResumeGame(); break; }
-                case State.Pause: { PauseGame(); break; }
-                case State.GameOver: { GameOver(); break; }
+                case State.None: { EventController.RaiseOnGameStartUI(); break; }
+                case State.Playing: { OnResumeGame(); break; }
+                case State.Pause: { OnPauseGame(); break; }
+                case State.StageComplete: { StageComplete(); break; }
+                case State.GameOver: { OnGameOver(); break; }
             }
         }
     }
-
-    private int Score
+    public int Score
     {
         get
         {
@@ -44,6 +44,7 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
+
     #region UnityMessages
     private new void Awake()
     {
@@ -55,11 +56,19 @@ public class GameManager : MonoSingleton<GameManager>
     private void OnEnable()
     {
         EventController.VisitorKilled += OnScoreAdded;
+        EventController.StageCompleteUI += OnStageComplete;
+        EventController.PauseGameUI += OnPauseGame;
+        EventController.ResumeGameUI += OnResumeGame;
+        EventController.GameOverUI += OnGameOver;
     }
 
     private void OnDisable()
     {
         EventController.VisitorKilled -= OnScoreAdded;
+        EventController.StageCompleteUI -= OnStageComplete;
+        EventController.PauseGameUI -= OnPauseGame;
+        EventController.RestartGameUI -= OnRestartGame;
+        EventController.GameOverUI -= OnGameOver;
     }
     #endregion
 
@@ -77,48 +86,44 @@ public class GameManager : MonoSingleton<GameManager>
     {
         GameState = _gameState;
     }
-    public void StartGame()
+    public void StartStage()
+    {
+        StopAllCoroutines();
+        Time.timeScale = 1;
+        gameState = State.Playing;
+        Debug.Log(gameState);
+        GameObject player = Instantiate(SpaceshipPrefab);
+        EventController.RaiseOnSpaceshipSpawn();
+        EventController.RaiseOnPlayingUI();
+    }
+    private void OnGameOver()
+    {
+        Time.timeScale = 0;
+        gameState = State.GameOver;
+    }
+    private void OnPauseGame()
+    {
+        Time.timeScale = 0;
+        gameState = State.Pause;
+    }
+    private void OnResumeGame()
     {
         Time.timeScale = 1;
         gameState = State.Playing;
-        EventController.RaiseOnResumeGame();
-        EventController.RaiseOnSpaceshipAnimationStarted();
-        StartCoroutine(SpawnPlayer());
     }
-
-    private void GameOver()
+    public void OnRestartGame()
     {
-        gameState = State.GameOver;
-        EventController.RaiseOnGameOver();
+        Score = 0;
+        StopAllCoroutines();
+        EventController.RaiseOnRestartGameUI();
     }
-
-    private void PauseGame()
+    private void OnStageComplete()
     {
-        gameState = State.Pause;
-        EventController.RaiseOnPauseGame();
+        gameState = State.StageComplete;
     }
-
-    private void ResumeGame()
+    private void StageComplete()
     {
-        gameState = State.Playing;
-        EventController.RaiseOnResumeGame();
+        Time.timeScale = 0;
     }
-
     #endregion
-
-    #region Coroutine
-    private IEnumerator SpawnPlayer()
-        {
-            GameObject player = Instantiate(playerPrefab, new Vector3(0f,-1,0f), Quaternion.Euler(0f,0f,90f));
-            while (player.transform.position.y <= 1.5f)
-                {
-                    player.transform.position = Vector2.MoveTowards(player.transform.position, new Vector3(0f, 1.5f, 0f), 3 * Time.deltaTime);
-                    yield return null;
-                }
-            yield return new WaitForSeconds(1);
-            EventController.RaiseOnGenerateLevel();
-        }
-    #endregion
-
-
 }

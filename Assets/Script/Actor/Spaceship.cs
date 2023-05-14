@@ -12,6 +12,9 @@ public class Spaceship : MonoBehaviour, IDamageable
     [SerializeField] private Transform cannonDx;
     [Tooltip("Add an Empty Object children in the location of cannonSx and link to this.")]
     [SerializeField] private Transform cannonSx;
+    [Tooltip("Add the Object children of the shield.")]
+    [SerializeField] private GameObject shield;
+
 
 
     private Transform trans;
@@ -19,22 +22,48 @@ public class Spaceship : MonoBehaviour, IDamageable
     private SpriteRenderer spriteRenderer;
     private IEnumerator moveCoroutine;
 
+    [Header("Position")]
+    [SerializeField] private Vector3 startPosition;
+    [SerializeField] private Vector3 playingPosition;
+    [SerializeField] private Vector3 endPosition;
+
+    [Header("Stats")]
     [SerializeField] private int lifePoint;
     [SerializeField] private float speed;
-    [SerializeField] private bool shooted;
+
+    [Header("CD Timer")]
     [SerializeField] private float shootTimer;
+    [SerializeField] private float shieldTimer;
+    [SerializeField] private float hitTimer;
+
+    [Header("CD Type")]
+    [SerializeField] private bool shooted;
+    [SerializeField] private bool IsShieldUP;
+    [SerializeField] private bool IsShieldInCD;
+    [SerializeField] private bool IsHitted;
+
 
 
 
     #region UnityMessages
-    private void Awake()
+    private void Awake() 
     {
         trans = gameObject.transform;
+        gameObject.transform.position = startPosition;
+        gameObject.transform.rotation = Quaternion.Euler(0f, 0f, 90f);
         rigidBody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         shooted = false;
+        IsShieldUP = false;
+        IsShieldInCD = false;
+        IsHitted = false;
         shootTimer = 0.5f;
+        shieldTimer = 3f;
+        hitTimer = 1f;
+        startPosition = new Vector3(0f, -1f, 0f);
+        playingPosition = new Vector3(0f, 1.5f, 0f);
+        endPosition = new Vector3(0f, 20f, 0f);
         speed = DataSO.Speed;
         lifePoint = DataSO.initialLifePoint;
         EventController.RaiseOnLivesChanged(lifePoint);
@@ -43,74 +72,54 @@ public class Spaceship : MonoBehaviour, IDamageable
     }
     private void OnEnable()
     {
-        EventController.SpaceshipAnimationStarted += DataSO.DisableInputs;
-        EventController.SpaceshipAnimationFinished += DataSO.EnableInputs;
-        DataSO.moveAction.started += OnMoveStarted;
-        DataSO.moveAction.canceled += OnMoveFinished;
-        DataSO.shootAction.started += OnShoot;
-    }
+        EventController.SpaceshipSpawn += Spawn;
+        EventController.SpaceshipMoveStarted += OnMoveStarted;
+        EventController.SpaceshipMoveFinished += OnMoveFinished;
 
+        EventController.SpaceshipShoot += Shoot;
+        EventController.SpaceshipShield += Shield;
+
+        EventController.StageCleared += StageCleared;
+    }
     private void OnDisable()
     {
-        EventController.SpaceshipAnimationStarted -= DataSO.DisableInputs;
-        EventController.SpaceshipAnimationFinished -= DataSO.EnableInputs;
-        DataSO.moveAction.started -= OnMoveStarted;
-        DataSO.moveAction.canceled -= OnMoveFinished;
-        DataSO.shootAction.started -= OnShoot;
+        EventController.SpaceshipSpawn -= Spawn;
+        EventController.SpaceshipMoveStarted -= OnMoveStarted;
+        EventController.SpaceshipMoveFinished -= OnMoveFinished;
+
+        EventController.SpaceshipShoot -= Shoot;
+        EventController.SpaceshipShield -= Shield;
+
+        EventController.StageCleared -= StageCleared;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.GetComponent<Laser>())
+        bool Condition = collision.collider.gameObject.GetComponent<Laser>()
+                         && !IsShieldUP
+                         && !IsHitted;
+        Debug.Log(Condition);
+        if (collision.collider.gameObject.GetComponent<Laser>()
+            && !IsShieldUP
+            && !IsHitted)
         {
-            if (lifePoint <= 1)
-            {
-                Time.timeScale = 0;
-                //Destroy(gameObject);
-            }
-            else if (lifePoint <= DataSO.initialLifePoint)
-            {
-                lifePoint--;
-                EventController.RaiseOnLivesChanged(lifePoint);
-            }
+            OnTakeDamage();
         }
     }
     #endregion
 
     #region Movement
 
-    private void OnMoveStarted(InputAction.CallbackContext context)
+    private void OnMoveStarted(InputAction.CallbackContext _context)
     {
-        moveCoroutine = OnMove(context.ReadValue<float>());
+        moveCoroutine = OnMove(_context.ReadValue<float>());
         StartCoroutine(moveCoroutine);
     }
 
-    private void OnMoveFinished(InputAction.CallbackContext context)
+    private void OnMoveFinished(InputAction.CallbackContext _context)
     {
         StopCoroutine(moveCoroutine);
         moveCoroutine = null;
-    }
-
-    #endregion
-
-    #region Shoot
-    private void OnShoot(InputAction.CallbackContext context)
-    {
-        if (!shooted)
-        {
-            Instantiate(DataSO.LaserPrefab, cannonSx.transform.position, Quaternion.Euler(0f,0f,90f));
-            Instantiate(DataSO.LaserPrefab, cannonDx.transform.position, Quaternion.Euler(0f, 0f, 90f));
-            shooted = true;
-            StartCoroutine(shootCD());
-        }
-    }
-    #endregion
-
-    #region Coroutine
-    private IEnumerator shootCD()
-    {
-        yield return new WaitForSeconds(shootTimer);
-        shooted = false;
     }
     private IEnumerator OnMove(float _input)
     {
@@ -125,4 +134,102 @@ public class Spaceship : MonoBehaviour, IDamageable
     }
     #endregion
 
+    #region Shoot
+    private void Shoot(InputAction.CallbackContext context)
+    {
+        if (!shooted)
+        {
+            shooted = true;
+            Instantiate(DataSO.LaserPrefab, cannonSx.transform.position, Quaternion.Euler(0f,0f,90f));
+            Instantiate(DataSO.LaserPrefab, cannonDx.transform.position, Quaternion.Euler(0f, 0f, 90f));
+            StartCoroutine(shootCD());
+        }
+    }
+    private IEnumerator shootCD()
+    {
+        yield return new WaitForSeconds(shootTimer);
+        shooted = false;
+    }
+    #endregion
+
+    #region Ability
+    private void Shield(InputAction.CallbackContext _context)
+    {
+        if (!IsShieldUP && !IsShieldInCD)
+        {
+            IsShieldInCD = true;
+            IsShieldUP = true;
+            shield.SetActive(true);
+            StartCoroutine(shieldCD());
+        }
+    }
+    private IEnumerator shieldCD()
+    {
+        yield return new WaitForSeconds(shieldTimer);
+        shield.SetActive(false);
+        IsShieldUP = false;
+        yield return new WaitForSeconds(shieldTimer*2);
+        IsShieldInCD = false;
+    }
+
+    #endregion
+
+    #region Animation
+    private void Spawn()
+    {
+        StartCoroutine(SpawnPlayerAnimation());
+    }
+    private IEnumerator SpawnPlayerAnimation()
+    {
+        while (transform.position.y <= 1.5f)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, playingPosition, 3 * Time.deltaTime);
+            yield return null;
+        }
+        EventController.RaiseOnGenerateStage();
+    }
+    private void StageCleared()
+    {
+        StartCoroutine(StageClearedAnimation());
+    }
+    private IEnumerator StageClearedAnimation()
+    {
+        EventController.RaiseOnSpaceshipAnimationStarted();
+        yield return new WaitForSeconds(0.5f);
+        endPosition = new Vector3(transform.position.x, endPosition.y, 0f);
+        while (transform.position.y <= endPosition.y - 1)
+        {
+            speed = speed + 0.1f;
+            transform.position = Vector2.MoveTowards(transform.position, endPosition, speed * Time.deltaTime);
+            yield return null;
+        }
+        EventController.RaiseOnStageCompleteUI();
+        Destroy(gameObject);
+    }
+    #endregion
+
+    #region Interface Method
+    public void OnTakeDamage()
+    {
+        IsHitted = true;
+        lifePoint--;
+        EventController.RaiseOnLivesChanged(lifePoint);
+        if (lifePoint < 0)
+        {
+            OnKill();
+        }
+        StartCoroutine(invulnerabilityCD());
+    }
+
+    private IEnumerator invulnerabilityCD()
+    {
+        yield return new WaitForSeconds(hitTimer);
+        IsHitted = false;
+    }
+
+    public void OnKill()
+    {
+        EventController.RaiseOnGameOverUI();
+    }
+    #endregion
 }
