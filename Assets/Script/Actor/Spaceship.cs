@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Pool;
 
 public class Spaceship : MonoBehaviour, IDamageable
 {
@@ -14,8 +15,6 @@ public class Spaceship : MonoBehaviour, IDamageable
     [SerializeField] private Transform cannonSx;
     [Tooltip("Add the Object children of the shield.")]
     [SerializeField] private GameObject shield;
-
-
 
     private Transform trans;
     private Rigidbody2D rigidBody;
@@ -41,9 +40,6 @@ public class Spaceship : MonoBehaviour, IDamageable
     [SerializeField] private bool IsShieldUP;
     [SerializeField] private bool IsShieldInCD;
     [SerializeField] private bool IsHitted;
-
-
-
 
     #region UnityMessages
     private void Awake() 
@@ -72,6 +68,7 @@ public class Spaceship : MonoBehaviour, IDamageable
     }
     private void OnEnable()
     {
+
         EventController.SpaceshipSpawn += Spawn;
         EventController.SpaceshipMoveStarted += OnMoveStarted;
         EventController.SpaceshipMoveFinished += OnMoveFinished;
@@ -79,7 +76,8 @@ public class Spaceship : MonoBehaviour, IDamageable
         EventController.SpaceshipShoot += Shoot;
         EventController.SpaceshipShield += Shield;
 
-        EventController.StageCleared += StageCleared;
+        EventController.StageComplete += StageComplete;
+        EventController.GameOverUI += DisableAnimation;
     }
     private void OnDisable()
     {
@@ -90,15 +88,11 @@ public class Spaceship : MonoBehaviour, IDamageable
         EventController.SpaceshipShoot -= Shoot;
         EventController.SpaceshipShield -= Shield;
 
-        EventController.StageCleared -= StageCleared;
+        EventController.StageComplete -= StageComplete;
+        EventController.GameOverUI -= DisableAnimation;
     }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        bool Condition = collision.collider.gameObject.GetComponent<Laser>()
-                         && !IsShieldUP
-                         && !IsHitted;
-        Debug.Log(Condition);
         if (collision.collider.gameObject.GetComponent<Laser>()
             && !IsShieldUP
             && !IsHitted)
@@ -135,14 +129,22 @@ public class Spaceship : MonoBehaviour, IDamageable
     #endregion
 
     #region Shoot
+
     private void Shoot(InputAction.CallbackContext context)
     {
         if (!shooted)
         {
             shooted = true;
-            Instantiate(DataSO.LaserPrefab, cannonSx.transform.position, Quaternion.Euler(0f,0f,90f));
-            Instantiate(DataSO.LaserPrefab, cannonDx.transform.position, Quaternion.Euler(0f, 0f, 90f));
-            StartCoroutine(shootCD());
+            GameObject laserShooted1 = Factory.Instance.activateLaser();
+            GameObject laserShooted2 = Factory.Instance.activateLaser();
+            if (laserShooted1 != null && laserShooted2 != null)
+            {
+                laserShooted1.SetActive(true);
+                laserShooted1.transform.position = cannonSx.transform.position;
+                laserShooted2.SetActive(true);
+                laserShooted2.transform.position = cannonDx.transform.position;
+                StartCoroutine(shootCD());
+            }
         }
     }
     private IEnumerator shootCD()
@@ -175,8 +177,15 @@ public class Spaceship : MonoBehaviour, IDamageable
     #endregion
 
     #region Animation
+
+    private void DisableAnimation()
+    {
+        StopAllCoroutines();
+    }
+
     private void Spawn()
     {
+        EventController.RaiseOnSpaceshipDisableInput();
         StartCoroutine(SpawnPlayerAnimation());
     }
     private IEnumerator SpawnPlayerAnimation()
@@ -188,13 +197,14 @@ public class Spaceship : MonoBehaviour, IDamageable
         }
         EventController.RaiseOnGenerateStage();
     }
-    private void StageCleared()
+    private void StageComplete()
     {
-        StartCoroutine(StageClearedAnimation());
+        StartCoroutine(StageCompleteAnimation());
     }
-    private IEnumerator StageClearedAnimation()
+    private IEnumerator StageCompleteAnimation()
     {
-        EventController.RaiseOnSpaceshipAnimationStarted();
+        EventController.RaiseOnSpaceshipDisableInput();
+        EventController.RaiseOnClearStage();
         yield return new WaitForSeconds(0.5f);
         endPosition = new Vector3(transform.position.x, endPosition.y, 0f);
         while (transform.position.y <= endPosition.y - 1)
@@ -229,6 +239,7 @@ public class Spaceship : MonoBehaviour, IDamageable
 
     public void OnKill()
     {
+        DisableAnimation();
         EventController.RaiseOnGameOverUI();
     }
     #endregion

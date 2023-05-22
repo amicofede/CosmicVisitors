@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class UIController : MonoSingleton<UIController>
+public class UIController : Utility.MonoSingleton<UIController>
 {
     public GameObject startMenuUI;
     public GameObject playingUI;

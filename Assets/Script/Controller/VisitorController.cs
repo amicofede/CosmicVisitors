@@ -2,18 +2,24 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class VisitorController : MonoSingleton<VisitorController>
+public class VisitorController : Utility.MonoSingleton<VisitorController>
 {
 
-    public List<GameObject> visitorPrefab;
-    public Visitor[] visitors;
-    public List<GameObject> activeVisitors;
-    private Vector2 direction;
-    [SerializeField] private float initialSpeed = 4;
-    [SerializeField] private float speed;
+    [SerializeField] private Visitor[] visitors;
+    [SerializeField] private List<GameObject> activeVisitors;
+
+    [SerializeField] private GameObject BossPrefab;
+
+    private Vector2Int direction;
+    private float maxSpeed;
+    private float speed;
     private float moveDownOverTime = 0.5f;
+    private float maxFireRate;
+    private float fireRate;
+
 
     public const char VisitorShip = '#';
     public const char EmptyShip = '-';
@@ -22,16 +28,18 @@ public class VisitorController : MonoSingleton<VisitorController>
     private new void Awake()
     {
         base.Awake();
+        direction = new Vector2Int((UnityEngine.Random.Range(0, 1) * 2 -1), 0);
+        maxSpeed = 5f;
+        maxFireRate = 50f;
         visitors = GetComponentsInChildren<Visitor>();
-        direction = Vector2.right;
+        activeVisitors = new List<GameObject>();
     }
     private void OnEnable()
     {
-        EventController.VisitorAnimationStarted += DisableAI;
-        EventController.VisitorAnimationFinished += EnableAI;
-
         EventController.VisitorHitBounds += ChangeDirection;
         EventController.BuildVisitorArmy += BuildVisitorArmy;
+
+        EventController.BossSpawn += SpawnBoss;
 
         EventController.PauseGameUI += DisableAI;
         EventController.ResumeGameUI += EnableAI;
@@ -40,11 +48,10 @@ public class VisitorController : MonoSingleton<VisitorController>
     }
     private void OnDisable()
     {
-        EventController.VisitorAnimationStarted -= DisableAI;
-        EventController.VisitorAnimationFinished -= EnableAI;
-
         EventController.VisitorHitBounds -= ChangeDirection;
         EventController.BuildVisitorArmy -= BuildVisitorArmy;
+
+        EventController.BossSpawn -= SpawnBoss;
 
         EventController.PauseGameUI -= DisableAI;
         EventController.ResumeGameUI -= EnableAI;
@@ -61,8 +68,8 @@ public class VisitorController : MonoSingleton<VisitorController>
     }
     private void DisableAI()
     {
-        StopCoroutine(ReturnFire());
-        StopCoroutine(MoveHorizontal());
+        Debug.Log("Disabled visitor");
+        StopAllCoroutines();
     }
     private bool IsOneVisitorActive()
     {
@@ -71,21 +78,29 @@ public class VisitorController : MonoSingleton<VisitorController>
             if (visitors[i].gameObject.activeInHierarchy)
                 return true;
         }
-        ClearVisitorArmy();
-        EventController.RaiseOnStageCleared();
+        DisableAI();
+        //ClearVisitorArmy();
+        EventController.RaiseOnStageComplete();
         return false;
     }
     public void OnVisitorKilled(GameObject _visitor)
     {
         activeVisitors.Remove(_visitor);
         SetSpeed();
+        EventController.RaiseOnVisitorKilled();
+
     }
     #endregion
 
     #region Movement
     private void SetSpeed()
     {
-        speed = initialSpeed - (activeVisitors.Count / 5);
+        speed = 1f + (maxSpeed * (1f - (((float)activeVisitors.Count) / (float)visitors.Length)));
+        //speed = maxSpeed - (activeVisitors.Count / 10f) - 1;
+        if (speed <= 0)
+        {
+            speed = 1;
+        }
     }
     public void ChangeDirection(bool _hitBounds)
     {
@@ -93,15 +108,15 @@ public class VisitorController : MonoSingleton<VisitorController>
     }
     private IEnumerator MoveTransition(bool _hitBounds)
     {
-        direction = Vector2.down;
+        direction = Vector2Int.down;
         yield return new WaitForSeconds(moveDownOverTime / speed);
         if (_hitBounds)
         {
-            direction = Vector2.left;
+            direction = Vector2Int.left;
         }
         else
         {
-            direction = Vector2.right;
+            direction = Vector2Int.right;
         }
     }
     private IEnumerator MoveHorizontal()
@@ -114,16 +129,26 @@ public class VisitorController : MonoSingleton<VisitorController>
 
                 visitors[i].Move(direction, speed * Time.fixedDeltaTime);
             }
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
     }
     #endregion
 
     #region Spawn
+    private void ClearVisitorArmy()
+    {
+        for (int i = visitors.Length - 1; i >= 0; i--)
+        {
+            visitors[i].OnKill();
+        }
+        activeVisitors.Clear();
+        visitors = new Visitor[0];
+    }
     private void BuildVisitorArmy()
     {
-        EventController.RaiseOnVisitorAnimationStarted();
-        ClearVisitorArmy();
+        DisableAI();
+        activeVisitors.Clear();
+        visitors = new Visitor[0];
         for (int r = 0; r < StageController.Instance.VisitorArmy.Length; r++)
         {
             for (int c = 0; c < StageController.Instance.VisitorArmy[r].Length; c++)
@@ -135,7 +160,10 @@ public class VisitorController : MonoSingleton<VisitorController>
 
                     case VisitorShip:
                         Array.Resize(ref visitors, visitors.Length + 1);
-                        GameObject VisitorObj = Instantiate(visitorPrefab[UnityEngine.Random.Range(0, visitorPrefab.Count)], new Vector2(c - 3, (((StageController.Instance.VisitorArmy.Length - 1) - r) * 1.5f) + 6f), Quaternion.Euler(0f, 0f, -90f), this.transform);
+                        GameObject VisitorObj = Factory.Instance.ActivateRandomVisitors();
+                        VisitorObj.transform.position = new Vector2(c - 3, (((StageController.Instance.VisitorArmy.Length - 1) - r) * 1.5f) + 9f);
+                        VisitorObj.transform.rotation = Quaternion.Euler(0f, 0f, -90f);
+                        //VisitorObj.transform.SetParent(gameObject.transform);
                         visitors[visitors.Length - 1] = VisitorObj.gameObject.GetComponent<Visitor>();
                         visitors[visitors.Length - 1].gameObject.SetActive(false);
                         break;
@@ -148,12 +176,6 @@ public class VisitorController : MonoSingleton<VisitorController>
         StartCoroutine(SpawnVisitor());
     }
 
-    private void ClearVisitorArmy()
-    {
-        activeVisitors.Clear();
-        visitors = new Visitor[0];
-    }
-
     private IEnumerator SpawnVisitor()
     {
         for(int i = 0;i < visitors.Length;i++)
@@ -164,17 +186,31 @@ public class VisitorController : MonoSingleton<VisitorController>
         }
         yield return new WaitForSeconds(1f);
         SetSpeed();
-        EventController.RaiseOnSpaceshipAnimationFinished();
-        EventController.RaiseOnVisitorAnimationFinished();
+        EventController.RaiseOnSpaceshipEnableInput();
+        EnableAI();
     }
+
+    private void SpawnBoss()
+    {
+        Instantiate(BossPrefab);
+    }
+
     #endregion
 
     #region Shoot
+    private void SetFireRate()
+    {
+        fireRate = 10f + (maxFireRate * (1f - (((float)activeVisitors.Count) / (float)visitors.Length)));
+        if (fireRate < 10)
+        {
+            fireRate = 10;
+        }
+    }
     private IEnumerator ReturnFire()
     {
-        int fireRate = 30;
-        while (true)
+        while (IsOneVisitorActive())
         {
+            SetFireRate();
             yield return new WaitForSeconds(UnityEngine.Random.Range(1,3));
             for (int i = 0; i < visitors.Length; i++)
             {

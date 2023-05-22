@@ -13,6 +13,7 @@ public class Laser : MonoBehaviour
     private Rigidbody2D rigidBody;
     public SpriteRenderer spriteRenderer;
 
+    #region UnityMessage
     private void Awake()
     {
         trans = gameObject.transform;
@@ -22,7 +23,18 @@ public class Laser : MonoBehaviour
         spriteRenderer.sprite = laserData.itemSprite;
     }
 
-    #region UnityMessage
+    private void OnEnable()
+    {
+        EventController.RestartGameUI += DeactivateLaser;
+        EventController.ClearStage += DeactivateLaser;
+    }
+
+    private void OnDisable()
+    {
+        EventController.RestartGameUI += DeactivateLaser;
+        EventController.ClearStage -= DeactivateLaser;
+    }
+
     private void FixedUpdate()
     {
         Vector2 direction = laserData.Direction.normalized;
@@ -35,7 +47,13 @@ public class Laser : MonoBehaviour
     #region Collision
     private void OnCollisionEnter2D(Collision2D collision)
     {
-         Destroy(gameObject);
+        laserData.ReturnToFactory(gameObject);
+        //Destroy(gameObject);
     }
     #endregion
+
+    public void DeactivateLaser()
+    {
+        laserData.ReturnToFactory(gameObject);
+    }
 }

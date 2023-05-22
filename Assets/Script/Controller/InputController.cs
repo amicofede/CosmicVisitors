@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputController : MonoSingleton<InputController>
+public class InputController : Utility.MonoSingleton<InputController>
 {
     [Header("CD Type")]
     [SerializeField] private bool IsPlaying;
@@ -25,8 +25,8 @@ public class InputController : MonoSingleton<InputController>
 
     private void OnEnable()
     {
-        EventController.SpaceshipAnimationStarted += DisableInputs;
-        EventController.SpaceshipAnimationFinished += EnableInputs;
+        EventController.SpaceshipEnableInput += EnableInputs;
+        EventController.SpaceshipDisableInput += DisableInputs;
         EventController.GameOverUI += DisableInputs;
 
         moveAction.started += OnMoveStarted;
@@ -39,8 +39,8 @@ public class InputController : MonoSingleton<InputController>
 
     private void OnDisable()
     {
-        EventController.SpaceshipAnimationStarted -= DisableInputs;
-        EventController.SpaceshipAnimationFinished -= EnableInputs;
+        EventController.SpaceshipEnableInput -= EnableInputs;
+        EventController.SpaceshipDisableInput += DisableInputs;
         EventController.GameOverUI -= DisableInputs;
 
         moveAction.started -= OnMoveStarted;
@@ -65,6 +65,7 @@ public class InputController : MonoSingleton<InputController>
     }
     private void DisableInputs()
     {
+        pauseGame.Disable();
         moveAction.Disable();
         shootAction.Disable();
         shieldAction.Disable();

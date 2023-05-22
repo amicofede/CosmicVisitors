@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioController : MonoSingleton<AudioController>
+public class AudioController : Utility.MonoSingleton<AudioController>
 {
 
 }

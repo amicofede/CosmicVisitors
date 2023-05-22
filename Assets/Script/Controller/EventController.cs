@@ -4,17 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class EventController : MonoSingleton<EventController>
+public class EventController : Utility.MonoSingleton<EventController>
 {
     public static event Action VisitorKilled;
-    public static event Action VisitorAnimationStarted;
-    public static event Action VisitorAnimationFinished;
     public static event Action<bool> VisitorHitBounds;
     public static event Action BuildVisitorArmy;
 
+    public static event Action BossSpawn;
+
     public static event Action SpaceshipSpawn;
-    public static event Action SpaceshipAnimationStarted;
-    public static event Action SpaceshipAnimationFinished;
     public static event Action SpaceshipDisableInput;
     public static event Action SpaceshipEnableInput;
     public static event Action<InputAction.CallbackContext> SpaceshipMoveStarted;
@@ -36,7 +34,8 @@ public class EventController : MonoSingleton<EventController>
     public static event Action PlayingUI;
 
     public static event Action GenerateStage;
-    public static event Action StageCleared;
+    public static event Action StageComplete;
+    public static event Action ClearStage;
 
 
     #region Visitor
@@ -44,14 +43,7 @@ public class EventController : MonoSingleton<EventController>
     {
         VisitorKilled?.Invoke();
     }
-    public static void RaiseOnVisitorAnimationStarted()
-    {
-        VisitorAnimationStarted?.Invoke();
-    }
-    public static void RaiseOnVisitorAnimationFinished()
-    {
-        VisitorAnimationFinished?.Invoke();
-    }
+
     public static void RaiseOnBuildVisitorArmy()
     {
         BuildVisitorArmy?.Invoke();
@@ -60,6 +52,14 @@ public class EventController : MonoSingleton<EventController>
     {
         VisitorHitBounds?.Invoke(_hitBounds);
     }
+    #endregion
+
+    #region Boss
+    public static void RaiseOnBossSpawn()
+    {
+        BossSpawn?.Invoke();
+    }
+
     #endregion
 
     #region SpaceShip
@@ -77,15 +77,6 @@ public class EventController : MonoSingleton<EventController>
         SpaceshipSpawn?.Invoke();
     }
 
-    public static void RaiseOnSpaceshipAnimationStarted()
-    {
-        SpaceshipAnimationStarted?.Invoke();
-    }
-
-    public static void RaiseOnSpaceshipAnimationFinished()
-    {
-        SpaceshipAnimationFinished?.Invoke();
-    }
 
     public static void RaiseOnSpaceshipMoveStarted(InputAction.CallbackContext _context)
     {
@@ -152,10 +143,15 @@ public class EventController : MonoSingleton<EventController>
     {
         GenerateStage?.Invoke();
     }
-
-    public static void RaiseOnStageCleared()
+    public static void RaiseOnClearStage()
     {
-        StageCleared?.Invoke();
+        ClearStage?.Invoke();
+    }
+
+    public static void RaiseOnStageComplete()
+    {
+        Debug.Log("StageCleared");
+        StageComplete?.Invoke();
     }
     #endregion
 }

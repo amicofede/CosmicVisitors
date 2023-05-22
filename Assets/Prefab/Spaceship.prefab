@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 4466213199047811453}
   - component: {fileID: 6115488000963830026}
   - component: {fileID: 8708448910435126147}
-  m_Layer: 7
+  m_Layer: 11
   m_Name: shield
-  m_TagString: Untagged
+  m_TagString: Shield
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -383,15 +383,18 @@ MonoBehaviour:
   cannonDx: {fileID: 6376538374303275012}
   cannonSx: {fileID: 4210143563003009868}
   shield: {fileID: 1833854895427371925}
-  lifePoint: 0
-  speed: 0
-  shooted: 0
-  shootTimer: 0
-  IsShieldUP: 0
-  shieldTimer: 0
   startPosition: {x: 0, y: 0, z: 0}
   playingPosition: {x: 0, y: 0, z: 0}
   endPosition: {x: 0, y: 0, z: 0}
+  lifePoint: 0
+  speed: 0
+  shootTimer: 0
+  shieldTimer: 0
+  hitTimer: 0
+  shooted: 0
+  IsShieldUP: 0
+  IsShieldInCD: 0
+  IsHitted: 0
 --- !u!114 &7616930013571518588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -404,6 +407,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bbf03810b317574ea678cb8defbfb06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsPlaying: 0
+  IsShieldUP: 0
   moveAction:
     m_Name: Move
     m_Type: 0
@@ -488,5 +493,3 @@ MonoBehaviour:
       m_Action: Pause Game
       m_Flags: 0
     m_Flags: 0
-  IsPlaying: 0
-  IsShieldUP: 0

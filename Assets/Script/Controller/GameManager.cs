@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Playables;
 using UnityEngine;
 
-public class GameManager : MonoSingleton<GameManager>
+public class GameManager : Utility.MonoSingleton<GameManager>
 {
     private int score;
     public GameObject SpaceshipPrefab;
@@ -76,7 +77,7 @@ public class GameManager : MonoSingleton<GameManager>
     private void OnScoreAdded()
     {
         Score++;
-        Debug.Log("Score: " + score);
+        //Debug.Log("Score: " + score);
     }
     #endregion
 
@@ -88,7 +89,10 @@ public class GameManager : MonoSingleton<GameManager>
     }
     public void StartStage()
     {
-        StopAllCoroutines();
+        if (StageController.Instance.Level == 0)
+        {
+            Score = 0;
+        }
         Time.timeScale = 1;
         gameState = State.Playing;
         Debug.Log(gameState);
@@ -113,8 +117,7 @@ public class GameManager : MonoSingleton<GameManager>
     }
     public void OnRestartGame()
     {
-        Score = 0;
-        StopAllCoroutines();
+        Destroy(GameObject.FindGameObjectWithTag("Spaceship"));
         EventController.RaiseOnRestartGameUI();
     }
     private void OnStageComplete()

@@ -75,7 +75,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -719799639
-  m_SortingLayer: 4
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 5312883c2d3f42947a62b8b81d71e220, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   laserData: {fileID: 11400000, guid: 0fda7669bca35f1459d11653413d1246, type: 2}
-  spriteRenderer: {fileID: 6395090021371642397}
+  spriteRenderer: {fileID: 0}
 --- !u!1 &2359531761784948165
 GameObject:
   m_ObjectHideFlags: 0

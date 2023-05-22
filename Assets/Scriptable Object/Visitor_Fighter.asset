@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialLifePoint: 2
   itemSprite: {fileID: 21300000, guid: 0c25d5f53fd8e014b83d3fe77a5aa02a, type: 3}
-  ReturnFirePrefab: {fileID: 189759616705539267, guid: b02249edd0b8edb40a36cfc02f547f97, type: 3}
+  visitorType: 1

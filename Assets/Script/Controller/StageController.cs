@@ -1,8 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Pool;
+using static Unity.VisualScripting.Antlr3.Runtime.Tree.TreeWizard;
 
-public class StageController : MonoSingleton<StageController>
+public class StageController : Utility.MonoSingleton<StageController>
 {
     [SerializeField] private int level = 0;
     public int Level { get { return level; } }
@@ -13,14 +17,12 @@ public class StageController : MonoSingleton<StageController>
     private void OnEnable()
     {
         EventController.GenerateStage += OnStageGenerate;
-        EventController.SpaceshipAnimationStarted += DestroyAll;
         EventController.RestartGameUI += RestartGame;
     }
 
     private void OnDisable()
     {
         EventController.GenerateStage -= OnStageGenerate;
-        EventController.SpaceshipAnimationStarted -= DestroyAll;
         EventController.RestartGameUI -= RestartGame;
     }
     #endregion
@@ -28,107 +30,97 @@ public class StageController : MonoSingleton<StageController>
     private void RestartGame()
     {
         level = 0;
-        DestroyAllActor();
     }
 
     public void OnStageGenerate()
     {
         level++;
-        switch (level)
+        if (level > 3)
         {
-            case 1: // Level 1
-                VisitorArmy = new string[]
-                {
-                    "#######",
-                    "-#####-",
-                    "--###--",
-                    "---#---",
-                    "-------",
-                    "-------",
-                    "-------",
-                    //"---#---",
-                    //"-------",
-                    //"-------",
-                    //"-------",
-                    //"-------",
-                    //"-------",
-                    //"-------",
-                };
-                EventController.RaiseOnBuildVisitorArmy();
-                break;
+            level = 0;
+            BossStage();
+        }
+        else
+        {
+            int random = UnityEngine.Random.Range(1, 3);
+            switch (random)
+            {
+                case 1:
+                    VisitorArmy = new string[]
+                    {
+                        //"---#---",
+                        //"-------",
+                        //"-------",
+                        //"-------",
+                        //"-------",
+                        //"-------",
+                        //"-------",
+                        "#######",
+                        "-#####-",
+                        "--###--",
+                        "---#---",
+                        "-------",
+                    };
+                    ShuffleVisitorArmy();
+                    EventController.RaiseOnBuildVisitorArmy();
+                    break;
 
-            case 2: // Level 2
-                VisitorArmy = new string[]
-                {
-                    //"---#---",
-                    //"-------",
-                    //"-------",
-                    //"-------",
-                    //"-------",
-                    //"-------",
-                    //"-------",
-                    "##-#-##",
-                    "-##-##-",
-                    "--###--",
-                    "-#-#-#-",
-                    "--###--",
-                    "---#---",
-                    "-------",
-                };
-                EventController.RaiseOnBuildVisitorArmy();
-                break;
+                case 2:
+                    VisitorArmy = new string[]
+                    {
+                        //"---#---",
+                        //"-------",
+                        //"-------",
+                        //"-------",
+                        //"-------",
+                        //"-------",
+                        //"-------",
+                        "##-#-##",
+                        "-##-##-",
+                        "--###--",
+                        "-#-#-#-",
+                        "--###--",
+                    };
+                    ShuffleVisitorArmy();
+                    EventController.RaiseOnBuildVisitorArmy();
+                    break;
 
-            case 3: // Level 3
-                VisitorArmy = new string[]
-                {
-                    //"---#---",
-                    //"-------",
-                    //"-------",
-                    //"-------",
-                    //"-------",
-                    //"-------",
-                    //"-------",
-                    "-##-##-",
-                    "##-#-##",
-                    "--#-#--",
-                    "-##-##-",
-                    "##-#-##",
-                    "-##-##-",
-                    "--###--",
-                };
-                EventController.RaiseOnBuildVisitorArmy();
-                break;
+                case 3:
+                    VisitorArmy = new string[]
+                    {
+                        //"---#---",
+                        //"-------",
+                        //"-------",
+                        //"-------",
+                        //"-------",
+                        //"-------",
+                        //"-------",
+                        "-##-##-",
+                        "##-#-##",
+                        "-##-##-",
+                        "##-#-##",
+                        "-##-##-",
+                    };
+                    ShuffleVisitorArmy();
+                    EventController.RaiseOnBuildVisitorArmy();
+                    break;
 
-            case 4: // Boss
-                break;
+                case 4: // Boss
+                    break;
+            }
         }
     }
 
-    public void DestroyAll()
+    private void ShuffleVisitorArmy()
     {
-        GameObject[] objectToDelete = GameObject.FindGameObjectsWithTag("Laser");
-        for (int i = 0; i < objectToDelete.Length; i++)
-        {
-            Destroy(objectToDelete[i]);
-        }
+        var rng = new System.Random();
+        var keys = VisitorArmy.Select(e => rng.NextDouble()).ToArray();
+        Array.Sort(keys, VisitorArmy);
     }
 
-    private void DestroyAllActor()
+    public void BossStage()
     {
-        GameObject[] LaserToDelete = GameObject.FindGameObjectsWithTag("Laser");
-        GameObject[] VisitorToDelete = GameObject.FindGameObjectsWithTag("Visitor");
-        GameObject[] SpaceshipToDelete = GameObject.FindGameObjectsWithTag("Spaceship");
-        for (int i = 0; i < LaserToDelete.Length; i++)
-        {
-            Destroy(LaserToDelete[i]);
-        }
-        for (int i = 0; i < VisitorToDelete.Length; i++)
-        {
-            Destroy(VisitorToDelete[i]);
-        }
-        for (int i = 0; i < SpaceshipToDelete.Length; i++)
-        {
-            Destroy(SpaceshipToDelete[i]);
-        }
+        EventController.RaiseOnBossSpawn();
     }
+
 }

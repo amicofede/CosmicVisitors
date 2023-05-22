@@ -1241,6 +1241,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524349087}
   m_CullTransparentMesh: 1
+--- !u!1 &543602122
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 543602123}
+  - component: {fileID: 543602124}
+  m_Layer: 0
+  m_Name: Factory
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &543602123
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 543602122}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &543602124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 543602122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41c7722ae38eae646a3d04d0e72499e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  laserPrefab: {fileID: 6779191691929089500, guid: 50b07738ccc79224caf4afdcf549396a, type: 3}
+  bossLaserPrefab: {fileID: 6779191691929089500, guid: 995ddc9f52c08014db740988dda48466, type: 3}
+  bossLaserOrbitPrefab: {fileID: 6779191691929089500, guid: a4f490430d9690f4b9aacb86ad018e2e, type: 3}
+  returnFireFighterPrefab: {fileID: 189759616705539267, guid: b02249edd0b8edb40a36cfc02f547f97, type: 3}
+  visitorFighterPrefab: {fileID: 3258417975015349655, guid: da0793e2b015d364492c2b2e4da1882f, type: 3}
+  visitorBomberPrefab: {fileID: 6880594796690449441, guid: ebd5995c793080d4fbf0b761f4715b22, type: 3}
+  returnFireBomberPrefab: {fileID: 6779191691929089500, guid: e0627a2111aead849b6d1f2755f56459, type: 3}
 --- !u!1 &545598896
 GameObject:
   m_ObjectHideFlags: 0
@@ -1979,13 +2030,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c735056bf9efcbd449107c31b0b589d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visitorPrefab:
-  - {fileID: 6880594796690449441, guid: ebd5995c793080d4fbf0b761f4715b22, type: 3}
-  - {fileID: 3258417975015349655, guid: da0793e2b015d364492c2b2e4da1882f, type: 3}
   visitors: []
   activeVisitors: []
-  initialSpeed: 4
-  speed: 0
+  BossPrefab: {fileID: 4869716228023017960, guid: ec00a330f93ede5468685efd96c8116d, type: 3}
 --- !u!1 &852167735
 GameObject:
   m_ObjectHideFlags: 0
@@ -2373,7 +2420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c16ea7f451940242b2df868d7e8ac62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 0
+  level: 3
   VisitorArmy: []
 --- !u!4 &1109543327
 Transform:

@@ -33,14 +33,24 @@ public class Visitor : MonoBehaviour, IDamageable
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-            if (collision.collider.gameObject.GetComponent<Laser>())
-            {
-                 OnTakeDamage();
-            }
-            else if (collision.collider.gameObject.GetComponent<ArenaController>())
-            {
-                EventController.RaiseOnVisitorHitBounds(trans.position.x > 0);
-            }
+        if (collision.collider.gameObject.GetComponent<Laser>())
+        {
+            OnTakeDamage();
+        }
+        else if (collision.collider.gameObject.GetComponent<ArenaController>())
+        {
+            EventController.RaiseOnVisitorHitBounds(trans.position.x > 0);
+        }
+        else if (collision.collider.gameObject.GetComponent<Spaceship>())
+        {
+            EventController.RaiseOnGameOverUI();
+            Destroy(collision.collider.gameObject);
+        }
+        else if (collision.collider.GetComponent<CircleCollider2D>())
+        {
+            lifePoint = 0;
+            OnTakeDamage();
+        }
     }
     #endregion
 
@@ -56,8 +66,32 @@ public class Visitor : MonoBehaviour, IDamageable
     #region Shoot
     public void OnShoot()
     {
-        Instantiate(DataSO.ReturnFirePrefab, cannonSx.transform.position, Quaternion.Euler(0f, 0f, -90f));
-        Instantiate(DataSO.ReturnFirePrefab, cannonDx.transform.position, Quaternion.Euler(0f, 0f, -90f));
+        GameObject ReturnFireShooted1;
+        GameObject ReturnFireShooted2;
+        switch (DataSO.visitorType)
+        {
+            case VisitorSO.VisitorType.Fighter:
+                ReturnFireShooted1 = Factory.Instance.activateReturnFireFighter();
+                ReturnFireShooted2 = Factory.Instance.activateReturnFireFighter();
+                SpawnReturnFire(ReturnFireShooted1, ReturnFireShooted2);
+                break;
+            case VisitorSO.VisitorType.Bomber:
+                ReturnFireShooted1 = Factory.Instance.activateReturnFireBomber();
+                ReturnFireShooted2 = Factory.Instance.activateReturnFireBomber();
+                SpawnReturnFire(ReturnFireShooted1, ReturnFireShooted2);
+                break;
+        }
+    }
+
+    public void SpawnReturnFire(GameObject _ReturnFireShooted1, GameObject _ReturnFireShooted2)
+    {
+        if (_ReturnFireShooted1 != null && _ReturnFireShooted2 != null)
+        {
+            _ReturnFireShooted1.SetActive(true);
+            _ReturnFireShooted2.SetActive(true);
+            _ReturnFireShooted1.transform.position = cannonSx.transform.position;
+            _ReturnFireShooted2.transform.position = cannonDx.transform.position;
+        }
     }
 
     #endregion
@@ -68,16 +102,22 @@ public class Visitor : MonoBehaviour, IDamageable
         lifePoint--;
         if (lifePoint <= 0)
         {
-
             OnKill();
         }
     }
 
     public void OnKill()
     {
-        EventController.RaiseOnVisitorKilled();
-        gameObject.GetComponentInParent<VisitorController>().OnVisitorKilled(gameObject);
-        gameObject.SetActive(false);
+        VisitorController.Instance.OnVisitorKilled(gameObject);
+        switch (DataSO.visitorType)
+        {
+            case VisitorSO.VisitorType.Fighter:
+                Factory.Instance.deactiveVisitorFighter(gameObject);
+                break;
+            case VisitorSO.VisitorType.Bomber:
+                Factory.Instance.deactiveVisitorBomber(gameObject);
+                break;
+        }
         //Destroy(gameObject);
     }
     #endregion
