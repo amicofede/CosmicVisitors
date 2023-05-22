@@ -2179,7 +2179,7 @@ GameObject:
   - component: {fileID: 950209486}
   - component: {fileID: 950209488}
   - component: {fileID: 950209487}
-  m_Layer: 10
+  m_Layer: 13
   m_Name: ArenaOutOfBoundsController
   m_TagString: Untagged
   m_Icon: {fileID: 0}

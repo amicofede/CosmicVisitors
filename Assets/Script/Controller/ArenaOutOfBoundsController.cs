@@ -13,8 +13,8 @@ public class ArenaOutOfBoundsController : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
-        halfCameraHeight = Camera.main.orthographicSize + 3;
-        halfCameraWidth = Camera.main.orthographicSize * Camera.main.aspect + 3;
+        halfCameraHeight = Camera.main.orthographicSize + 8;
+        halfCameraWidth = Camera.main.orthographicSize * Camera.main.aspect + 8;
         edgeCollider = GetComponent<EdgeCollider2D>();
 
         Vector2[] points =

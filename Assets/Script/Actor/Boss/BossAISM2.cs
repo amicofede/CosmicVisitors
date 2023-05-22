@@ -34,6 +34,7 @@ public class BossAISM2 : MonoBehaviour, IDamageable
     private void Awake()
     {
         var rigidBody2D = GetComponent<Rigidbody2D>();
+        var spaceship = FindAnyObjectByType<Spaceship>();
 
         stateMachine = new StateMachine();
 
@@ -50,7 +51,7 @@ public class BossAISM2 : MonoBehaviour, IDamageable
 
 
         var PhaseOne = new PhaseOne(this, rigidBody2D, startPosition, playingPosition, speed, timeBetweenShoot, cannonDx, cannonSx);
-        var PhaseTwo = new PhaseTwo(this);
+        var PhaseTwo = new PhaseTwo(this, OrbitCannon, spaceship);
         var PhaseThree = new PhaseThree(this);
         var PhaseTransition = new PhaseTransition(this, playingPosition, shield);
 
