@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class PhaseThree : IState
 {
-    private readonly BossAISM2 boss;
+    private BossAISM2 boss;
     public PhaseThree(BossAISM2 _boss)
     {
-        _boss = boss;
+        boss = _boss;
     }
     public void OnEnter()
     {

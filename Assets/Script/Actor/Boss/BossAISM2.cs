@@ -58,7 +58,7 @@ public class BossAISM2 : MonoBehaviour, IDamageable
         At(PhaseOne, PhaseTransition, PhaseOneEnded());
         At(PhaseTransition, PhaseTwo, PhaseTransitionOneEnded());
         At(PhaseTwo, PhaseTransition, PhaseTwoEnded());
-        At(PhaseTransition, PhaseThree, PhaseTransitionOneEnded());
+        At(PhaseTransition, PhaseThree, PhaseTransitionTwoEnded());
 
         stateMachine.SetState(PhaseOne);
 
@@ -68,8 +68,12 @@ public class BossAISM2 : MonoBehaviour, IDamageable
         }
 
         Func<bool> PhaseOneEnded() => () => currentLifePoint <= (maxLifePoint * 2 / 3);
-        Func<bool> PhaseTransitionOneEnded() => () => (gameObject.transform.position == playingPosition && PhaseTransition.TransitionEnded);
+        Func<bool> PhaseTransitionOneEnded() => () => (gameObject.transform.position == playingPosition
+                                                    && PhaseTransition.TransitionEnded);
         Func<bool> PhaseTwoEnded() => () => currentLifePoint <= (maxLifePoint * 1 / 3);
+        Func<bool> PhaseTransitionTwoEnded() => () => (gameObject.transform.position == playingPosition
+                                                    && PhaseTransition.TransitionEnded)
+                                                    && currentLifePoint <= (maxLifePoint * 1 / 3);
     }
 
     private void Update()

@@ -34,6 +34,14 @@ public class PhaseTwo : IState
 
     public void OnExit()
     {
+        isOrbitShooting = false;
+        orbitLaserCount = 0;
+        for (int i = 0; i < orbitLasers.Count; i++)
+        {
+            Debug.Log("removed: " + orbitLasers[i] + "_" + i);
+            Factory.Instance.deactiveBossLaserOrbit(orbitLasers[i]);
+            orbitLasers.Remove(orbitLasers[i]);
+        }
     }
 
     public void Tick()
@@ -82,19 +90,16 @@ public class PhaseTwo : IState
 
     private void OrbitMove()
     {
+        float spaceshipX = spaceship.gameObject.transform.position.x;
+        float spaceshipY = -3;
+        float spaceshipZ = spaceship.gameObject.transform.position.z;
         for (int i = 0; i < orbitLasers.Count; i++)
         {
-            float spaceshipX = spaceship.gameObject.transform.position.x;
-            float spaceshipY = -3;
-            float spaceshipZ = spaceship.gameObject.transform.position.z;
             orbitLasers[i].transform.position = Vector2.MoveTowards(orbitLasers[i].transform.position,
                                                                     new Vector3(spaceshipX, spaceshipY, spaceshipZ),
                                                                     10 * Time.deltaTime);
-            if (orbitLasers[i].transform.position.y < -1)
+            if (!orbitLasers[i].activeSelf)
             {
-                orbitLasers[i].transform.position = Vector2.MoveTowards(orbitLasers[i].transform.position,
-                                                                        new Vector3(spaceshipX, spaceshipY - 10, spaceshipZ),
-                                                                        10 * Time.deltaTime);
                 orbitLasers.Remove(orbitLasers[i]);
                 if (orbitLasers.Count == 0)
                 {

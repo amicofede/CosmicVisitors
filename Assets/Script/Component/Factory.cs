@@ -37,11 +37,11 @@ public class Factory : Utility.MonoSingleton<Factory>
 
         GameObject bossLasersOrbitPool = new GameObject("BossLasersOrbitPool");
         bossLasersOrbitPool.transform.SetParent(gameObject.transform);
-        bossLasersOrbit = new Utility.ObjectPool(bossLaserOrbitPrefab, bossLasersOrbitPool.gameObject.transform, 20);
+        bossLasersOrbit = new Utility.ObjectPool(bossLaserOrbitPrefab, bossLasersOrbitPool.gameObject.transform, 9);
 
         GameObject visitorsFighterPool = new GameObject("VisitorsFighterPool");
         visitorsFighterPool.transform.SetParent(gameObject.transform);
-        visitorsFighter = new Utility.ObjectPool(visitorFighterPrefab, visitorsFighterPool.gameObject.transform, 20);
+        visitorsFighter = new Utility.ObjectPool(visitorFighterPrefab, visitorsFighterPool.gameObject.transform, 49);
 
         GameObject returnFiresFighterPool = new GameObject("ReturnsFiresFighterPool");
         returnFiresFighterPool.transform.SetParent(gameObject.transform);

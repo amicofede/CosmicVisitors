@@ -32,6 +32,7 @@ public class PhaseTransition : IState
 
     public void OnExit()
     {
+        transitionEnded = false;
     }
 
     public void Tick()
@@ -47,7 +48,7 @@ public class PhaseTransition : IState
         {
             if (shieldUPCD <= 1)
             {
-                Debug.Log(shieldUPCD);
+                //Debug.Log(shieldUPCD);
                 shieldUPCD += Time.deltaTime;
             }
             else

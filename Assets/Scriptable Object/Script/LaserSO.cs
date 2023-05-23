@@ -43,7 +43,7 @@ public class LaserSO : ScriptableObject
                 Factory.Instance.deactiveBossLaser(_obj);
                 break;
             case shootType.BossLaserOrbit:
-                Factory.Instance.deactiveBossLaser(_obj);
+                Factory.Instance.deactiveBossLaserOrbit(_obj);
                 break;
         }
     }
