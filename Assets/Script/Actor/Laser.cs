@@ -13,6 +13,9 @@ public class Laser : MonoBehaviour
     private Rigidbody2D rigidBody;
     public SpriteRenderer spriteRenderer;
 
+    private Vector2 laserPosition;
+    private Vector2 laserDirection;
+
     #region UnityMessage
     private void Awake()
     {
@@ -21,6 +24,7 @@ public class Laser : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         spriteRenderer.sprite = laserData.itemSprite;
+
     }
 
     private void OnEnable()
@@ -37,10 +41,27 @@ public class Laser : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector2 direction = laserData.Direction.normalized;
         float movementMagnitude = laserData.Speed * Time.fixedDeltaTime;
+        if (laserData.type == LaserSO.shootType.BossLaserOrbit)
+        {
+            Vector2 spaceshipPosition = GameObject.FindGameObjectWithTag("Spaceship").transform.position;
+            if (trans.position.y > 6)
+            {
+                laserPosition = trans.position;
+                laserDirection = (spaceshipPosition - laserPosition).normalized;
+                rigidBody.MovePosition(laserPosition + laserDirection * movementMagnitude);
+            }
+            else
+            {
+                rigidBody.MovePosition((Vector2)trans.position + laserDirection * movementMagnitude);
+            }
+        }
+        else
+        {
+            Vector2 direction = laserData.Direction.normalized;
+            rigidBody.MovePosition(trans.position + (Vector3)direction * movementMagnitude);
+        }
 
-        rigidBody.MovePosition(trans.position + (Vector3)direction * movementMagnitude);
     }
     #endregion
 

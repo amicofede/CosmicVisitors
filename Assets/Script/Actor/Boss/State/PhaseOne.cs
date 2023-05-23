@@ -18,8 +18,6 @@ public class PhaseOne : IState
     private float timeBetweenShoot;
     private float shootCD;
 
-    private bool EnterPhase;
-
     private Rigidbody2D rigidBody2D;
 
     public PhaseOne(BossAISM2 _boss, Rigidbody2D _rigidBody2D, Vector3 _startPosition, Vector3 _playingPosition, float _speed, float _timeBetweenShoot, Transform _cannonDx, Transform _cannonSx)
@@ -35,8 +33,8 @@ public class PhaseOne : IState
     }
     public void OnEnter()
     {
+        rigidBody2D.isKinematic = true;
         shootCD = 0;
-        EnterPhase = true;
         boss.gameObject.transform.position = startPosition;
     }
 
@@ -46,17 +44,17 @@ public class PhaseOne : IState
 
     public void Tick()
     {
-        if (EnterPhase)
+        if (boss.gameObject.transform.position.y > playingPosition.y)
         {
-            if (boss.gameObject.transform.position.y <= playingPosition.y)
-            {
-                EnterPhase = false;
-            }
             currentPosition = boss.gameObject.transform.position;
-            boss.gameObject.transform.position = Vector2.MoveTowards(currentPosition, playingPosition, 1 * Time.deltaTime);
+            Vector2 movement = (playingPosition - currentPosition).normalized;
+            rigidBody2D.MovePosition((Vector2)currentPosition + movement * 1 * Time.fixedDeltaTime);
         }
         else
         {
+            boss.gameObject.transform.position = new Vector3(boss.gameObject.transform.position.x, playingPosition.y, 0f);
+            rigidBody2D.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+            rigidBody2D.isKinematic = false;
             EventController.RaiseOnSpaceshipEnableInput();
             MoveHorizontal();
             Shoot();

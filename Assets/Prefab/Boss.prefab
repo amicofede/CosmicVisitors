@@ -331,7 +331,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 1000000
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -345,7 +345,7 @@ Rigidbody2D:
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 6
+  m_Constraints: 0
 --- !u!95 &-2818646179213661683
 Animator:
   serializedVersion: 5
@@ -383,6 +383,8 @@ MonoBehaviour:
   cannonSx: {fileID: 4210143563003009868}
   OrbitCannon: {fileID: 8102713698362321901}
   shield: {fileID: 3382747011725085830}
+  maxLifePoint: 0
+  currentLifePoint: 0
 --- !u!1 &8099561670170319554
 GameObject:
   m_ObjectHideFlags: 0

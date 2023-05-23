@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2298607508463925703}
   - component: {fileID: 2139204090883698855}
   - component: {fileID: 3132641120400532653}
-  m_Layer: 8
+  m_Layer: 14
   m_Name: BossLaserOrbit
   m_TagString: Laser
   m_Icon: {fileID: 0}
@@ -174,7 +174,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6653926567555553120}
   - component: {fileID: 6249487423586166687}
-  m_Layer: 8
+  m_Layer: 14
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -238,7 +238,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Time: 0.1
+  m_Time: 0.5
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3

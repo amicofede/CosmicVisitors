@@ -118,6 +118,7 @@ public class GameManager : Utility.MonoSingleton<GameManager>
     public void OnRestartGame()
     {
         Destroy(GameObject.FindGameObjectWithTag("Spaceship"));
+        Destroy(GameObject.FindGameObjectWithTag("Visitor"));
         EventController.RaiseOnRestartGameUI();
     }
     private void OnStageComplete()

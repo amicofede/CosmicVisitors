@@ -53,12 +53,12 @@ public class BossAISM2 : MonoBehaviour, IDamageable
         var PhaseOne = new PhaseOne(this, rigidBody2D, startPosition, playingPosition, speed, timeBetweenShoot, cannonDx, cannonSx);
         var PhaseTwo = new PhaseTwo(this, OrbitCannon, spaceship);
         var PhaseThree = new PhaseThree(this);
-        var PhaseTransition = new PhaseTransition(this, playingPosition, shield);
+        var PhaseTransition = new PhaseTransition(this, playingPosition, shield, rigidBody2D);
 
         At(PhaseOne, PhaseTransition, PhaseOneEnded());
         At(PhaseTransition, PhaseTwo, PhaseTransitionOneEnded());
         At(PhaseTwo, PhaseTransition, PhaseTwoEnded());
-        At(PhaseTransition, PhaseThree, PhaseTransitionOneEnded());
+        At(PhaseTransition, PhaseThree, PhaseTransitionTwoEnded());
 
         stateMachine.SetState(PhaseOne);
 
@@ -70,11 +70,11 @@ public class BossAISM2 : MonoBehaviour, IDamageable
         Func<bool> PhaseOneEnded() => () => currentLifePoint <= (maxLifePoint * 2 / 3);
         Func<bool> PhaseTransitionOneEnded() => () => (gameObject.transform.position == playingPosition && PhaseTransition.TransitionEnded);
         Func<bool> PhaseTwoEnded() => () => currentLifePoint <= (maxLifePoint * 1 / 3);
+        Func<bool> PhaseTransitionTwoEnded() => () => (gameObject.transform.position == playingPosition && PhaseTransition.TransitionEnded && currentLifePoint <= (maxLifePoint * 1 / 3));
     }
 
     private void Update()
     {
-        //Debug.Log("Update");
         stateMachine.Tick();
     }
 
