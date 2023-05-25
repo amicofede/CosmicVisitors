@@ -36,6 +36,7 @@ public class PhaseTransition : IState
 
     public void OnExit()
     {
+        shield.SetActive(false);
     }
 
 
@@ -72,7 +73,6 @@ public class PhaseTransition : IState
             {
                 boss.gameObject.transform.position = playingPosition;
             }
-
         }
     }
 
@@ -84,7 +84,6 @@ public class PhaseTransition : IState
         }
         else
         {
-            shield.SetActive(false);
             transitionEnded = true;
         }
     }

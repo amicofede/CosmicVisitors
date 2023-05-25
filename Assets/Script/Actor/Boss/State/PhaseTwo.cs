@@ -18,14 +18,16 @@ public class PhaseTwo : IState
     private int orbitLaserInGame;
     private float orbitSpawnTimer;
 
+    private Rigidbody2D rigidBody2D;
 
     private List<Laser> orbitLasers = new List<Laser>();
 
-    public PhaseTwo(BossAISM _boss, Vector3 _playingPosition, Transform _orbitCannon, Spaceship _spaceship)
+    public PhaseTwo(BossAISM _boss, Rigidbody2D _rigidbody2D, Vector3 _playingPosition, Transform _orbitCannon, Spaceship _spaceship)
     {
         boss = _boss;
         orbitCannon = _orbitCannon;
         playingPosition = _playingPosition;
+        rigidBody2D = _rigidbody2D;
     }
     public void OnEnter()
     {
@@ -34,7 +36,8 @@ public class PhaseTwo : IState
         orbitLaserInGame = 0;
         orbitSpawnTimer = 0;
         randomPosition = Random.Range(0, 1) * 2 - 1;
-        nextOrbitPosition = new Vector3(Random.Range(-3f, 3f), 13f, 0f);
+        nextOrbitPosition = new Vector3(randomPosition * Random.Range(0f, 3f), 13f, 0f);
+        EventController.RaiseOnSpaceshipEnableInput();
     }
 
     public void OnExit()
@@ -59,19 +62,33 @@ public class PhaseTwo : IState
 
     public void QuickMove()
     {
-        boss.transform.position = Vector2.MoveTowards(boss.transform.position, nextOrbitPosition, 20 * Time.deltaTime);
-        if (boss.transform.position == nextOrbitPosition)
+
+        if (nextOrbitPosition.x < 0)
         {
-            isOrbitShooting = true;
-            if (randomPosition < 0)
+            if (boss.gameObject.transform.position.x > nextOrbitPosition.x)
             {
-                randomPosition = 1;
+                rigidBody2D.MovePosition(boss.gameObject.transform.position + (Vector3)Vector2.left * 20 * Time.fixedDeltaTime);
             }
             else
             {
-                randomPosition = -1;
+                isOrbitShooting = true;
+                randomPosition = -randomPosition;
+                nextOrbitPosition = new Vector3(randomPosition * Random.Range(0f, 3f), 13f, 0f);
+                Debug.Log(nextOrbitPosition);
             }
-            nextOrbitPosition = new Vector3(randomPosition * Random.Range(0, 3f), 13f, 0f);
+        }
+        else
+        {
+            if (boss.gameObject.transform.position.x < nextOrbitPosition.x)
+            {
+                rigidBody2D.MovePosition(boss.gameObject.transform.position + (Vector3)Vector2.right * 20 * Time.fixedDeltaTime);
+            }
+            else
+            {
+                isOrbitShooting = true;
+                randomPosition = -randomPosition;
+                nextOrbitPosition = new Vector3(randomPosition * Random.Range(0f, 3f), 13f, 0f);
+            }
         }
     }
 

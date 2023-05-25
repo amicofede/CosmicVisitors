@@ -35,9 +35,15 @@ public class EnterPhase : IState
     {
         rigidBody2D.isKinematic = false;
         rigidBody2D.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+        EventController.RaiseOnSpaceshipEnableInput();
     }
 
     public void Tick()
+    {
+        Move();
+    }
+
+    public void Move()
     {
         if (boss.gameObject.transform.position.y > playingPosition.y)
         {
@@ -49,5 +55,6 @@ public class EnterPhase : IState
         {
             isEntered = true;
         }
+
     }
 }

@@ -2420,9 +2420,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c16ea7f451940242b2df868d7e8ac62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 0
+  level: 3
   VisitorArmy: []
-  BossPhase: 0
+  BossPhase: 3
 --- !u!4 &1109543327
 Transform:
   m_ObjectHideFlags: 0

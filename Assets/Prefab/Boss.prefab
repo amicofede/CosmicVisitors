@@ -414,7 +414,7 @@ MonoBehaviour:
   cannonDx: {fileID: 6376538374303275012}
   cannonSx: {fileID: 4210143563003009868}
   OrbitCannon: {fileID: 8102713698362321901}
-  SolarBeam: {fileID: 0}
+  SolarBeam: {fileID: 1292082722658723515}
   shield: {fileID: 3382747011725085830}
   maxLifePoint: 0
   currentLifePoint: 0

@@ -30,6 +30,7 @@ public class PhaseOne : IState
     public void OnEnter()
     {
         boss.gameObject.transform.position = playingPosition;
+        EventController.RaiseOnSpaceshipEnableInput();
     }
 
     public void OnExit()
@@ -38,8 +39,7 @@ public class PhaseOne : IState
 
     public void Tick()
     {
-        boss.gameObject.transform.position = new Vector3(boss.gameObject.transform.position.x, playingPosition.y, 0f);
-        EventController.RaiseOnSpaceshipEnableInput();
+        //boss.gameObject.transform.position = new Vector3(boss.gameObject.transform.position.x, playingPosition.y, 0f);
         MoveHorizontal();
         Shoot();
     }

@@ -47,13 +47,13 @@ public class BossAISM : MonoBehaviour, IDamageable
         timeBetweenShoot = 0.75f;
 
         maxLifePoint = 100;
-        currentLifePoint = maxLifePoint;
+        currentLifePoint = 36;//maxLifePoint;
 
         shield.SetActive(false);
 
         var EnterPhase = new EnterPhase(this, rigidBody2D, startPosition, playingPosition);
         var PhaseOne = new PhaseOne(this, rigidBody2D, playingPosition, speed, timeBetweenShoot, cannonDx, cannonSx);
-        var PhaseTwo = new PhaseTwo(this, playingPosition, OrbitCannon, spaceship);
+        var PhaseTwo = new PhaseTwo(this, rigidBody2D, playingPosition, OrbitCannon, spaceship);
         var PhaseThree = new PhaseThree(this, rigidBody2D, playingPosition, SolarBeam, shield);
         var PhaseTransition = new PhaseTransition(this, playingPosition, shield, rigidBody2D);
 
@@ -89,7 +89,7 @@ public class BossAISM : MonoBehaviour, IDamageable
 
         Func<bool> EnterPhaseEnded() => () => EnterPhase.IsEntered;
         Func<bool> PhaseOneEnded() => () => currentLifePoint <= (maxLifePoint * 2 / 3);
-        Func<bool> PhaseTransitionOneEnded() => () => (gameObject.transform.position == playingPosition && PhaseTransition.TransitionEnded);
+        Func<bool> PhaseTransitionOneEnded() => () => (gameObject.transform.position == playingPosition && PhaseTransition.TransitionEnded && currentLifePoint > (maxLifePoint * 1 / 3));
         Func<bool> PhaseTwoEnded() => () => currentLifePoint <= (maxLifePoint * 1 / 3);
         Func<bool> PhaseTransitionTwoEnded() => () => (gameObject.transform.position == playingPosition && PhaseTransition.TransitionEnded && currentLifePoint <= (maxLifePoint * 1 / 3));
     }

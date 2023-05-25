@@ -61,7 +61,6 @@ public class Laser : MonoBehaviour
             Vector2 direction = laserData.Direction.normalized;
             rigidBody.MovePosition(trans.position + (Vector3)direction * movementMagnitude);
         }
-
     }
     #endregion
 
