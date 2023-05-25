@@ -5,15 +5,14 @@ using UnityEngine;
 
 public class PhaseTwo : IState
 {
-    private BossAISM2 boss;
+    private BossAISM boss;
+
+    private Vector3 playingPosition;
 
     private Vector3 nextOrbitPosition;
     private int randomPosition;
-    private Vector2 spaceshipPosition;
-    private Vector2 laserCurrentPosition;
 
     private Transform orbitCannon;
-    private Spaceship spaceship;
 
     private bool isOrbitShooting;
     private int orbitLaserInGame;
@@ -22,14 +21,15 @@ public class PhaseTwo : IState
 
     private List<Laser> orbitLasers = new List<Laser>();
 
-    public PhaseTwo(BossAISM2 _boss, Transform _orbitCannon, Spaceship _spaceship)
+    public PhaseTwo(BossAISM _boss, Vector3 _playingPosition, Transform _orbitCannon, Spaceship _spaceship)
     {
         boss = _boss;
         orbitCannon = _orbitCannon;
-        spaceship = _spaceship;
+        playingPosition = _playingPosition;
     }
     public void OnEnter()
     {
+        boss.gameObject.transform.position = playingPosition;
         isOrbitShooting = false;
         orbitLaserInGame = 0;
         orbitSpawnTimer = 0;
@@ -108,68 +108,3 @@ public class PhaseTwo : IState
         }
     }
 }
-//            //if (orbitLasers[i].transform.position.y > 4)
-//            //{
-//            //    Debug.Log("Position_" + i + "_" + orbitLasersPosition[i]);
-//            //    spaceshipPosition = spaceship.transform.position;
-//            //    Vector2 movement = (spaceshipPosition - orbitLasersPosition[i]).normalized;
-//            //    orbitLasersDirection.Add(movement);
-//            //    Debug.Log("Direction_" + i + "_" + orbitLasersDirection[i]);
-//            //    orbitLasers[i].gameObject.GetComponent<Rigidbody2D>().MovePosition(orbitLasersPosition[i] + orbitLasersDirection[i] * 10 * Time.fixedDeltaTime);
-//            //}
-//            //else
-//            //{
-//            //    orbitLasers[i].gameObject.GetComponent<Rigidbody2D>().MovePosition(orbitLasersPosition[i] + orbitLasersDirection[i] * 10 * Time.fixedDeltaTime);
-//            //}
-//            //Vector2 laserCurrentPosition = orbitLasers[i].gameObject.transform.position;
-//            //Vector2 spaceshipPosition = spaceship.transform.position;
-//            //Vector2 movement = (spaceshipPosition - laserCurrentPosition).normalized;
-//            //float orbitMoveSpeed = 10 * Time.fixedDeltaTime;
-//            //if (orbitLasers[i].transform.position.y > 4)
-//            //{
-//            //}
-//            //rigidBody2D.MovePosition((Vector2)currentPosition + movement * 1 * Time.fixedDeltaTime);
-
-
-//            //        orbitLasers[i].transform.position = Vector2.MoveTowards(orbitLasers[i].transform.position, spaceshipPosition,
-//            //                                                                10 * Time.deltaTime);
-//            //        if (orbitLasers[i].transform.position.y < -1)
-//            //        {
-//            //            orbitLasers[i].transform.position = Vector2.MoveTowards(orbitLasers[i].transform.position,
-//            //                                                                    new Vector3(spaceshipX, spaceshipY - 10, spaceshipZ),
-//            //                                                                    10 * Time.deltaTime);
-
-//            //            orbitLasers.Remove(orbitLasers[i]);
-//            //            if (orbitLasers.Count == 0)
-//            //            {
-//            //                isOrbitShooting = false;
-//            //                orbitLaserCount = 0;
-//            //            }
-//            //        }
-//            //    }
-//            //}
-//            //{
-//            //    private Vector3 nextOrbitPosition;
-
-//            //    public EnemyAISM Boss { get; set; }
-
-//            //    public Phase2(Vector3 _nextOrbitPosition)
-//            //    {
-//            //        this.nextOrbitPosition = _nextOrbitPosition;
-//            //    }
-
-//            //    public void EnterState(EnemyAISM _boss)
-//            //    {
-//            //        Boss = _boss;
-//            //    }
-
-//            //    public void ExitState()
-//            //    {
-//            //    }
-
-//            //    public void UpdateState()
-//            //    {
-//            //    }
-//            //}
-//        }
-//}

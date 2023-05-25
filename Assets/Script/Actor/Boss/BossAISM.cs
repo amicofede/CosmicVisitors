@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossAISM2 : MonoBehaviour, IDamageable
+public class BossAISM : MonoBehaviour, IDamageable
 {
     private StateMachine stateMachine;
 
@@ -13,6 +13,8 @@ public class BossAISM2 : MonoBehaviour, IDamageable
     [SerializeField] private Transform cannonSx;
     [Tooltip("Add an Empty Object children in the location of OrbitCannon and link to this.")]
     [SerializeField] private Transform OrbitCannon;
+    [Tooltip("Add an Empty Object children in the location of SolarBeam and link to this.")]
+    [SerializeField] private Transform SolarBeam;
     [Tooltip("Add the Object children of the shield.")]
     [SerializeField] private GameObject shield;
 
@@ -45,28 +47,47 @@ public class BossAISM2 : MonoBehaviour, IDamageable
         timeBetweenShoot = 0.75f;
 
         maxLifePoint = 100;
-        currentLifePoint = 70;//maxLifePoint;
+        currentLifePoint = maxLifePoint;
 
         shield.SetActive(false);
 
-
-        var PhaseOne = new PhaseOne(this, rigidBody2D, startPosition, playingPosition, speed, timeBetweenShoot, cannonDx, cannonSx);
-        var PhaseTwo = new PhaseTwo(this, OrbitCannon, spaceship);
-        var PhaseThree = new PhaseThree(this);
+        var EnterPhase = new EnterPhase(this, rigidBody2D, startPosition, playingPosition);
+        var PhaseOne = new PhaseOne(this, rigidBody2D, playingPosition, speed, timeBetweenShoot, cannonDx, cannonSx);
+        var PhaseTwo = new PhaseTwo(this, playingPosition, OrbitCannon, spaceship);
+        var PhaseThree = new PhaseThree(this, rigidBody2D, playingPosition, SolarBeam, shield);
         var PhaseTransition = new PhaseTransition(this, playingPosition, shield, rigidBody2D);
 
+        At(EnterPhase, PhaseOne, EnterPhaseEnded());
         At(PhaseOne, PhaseTransition, PhaseOneEnded());
         At(PhaseTransition, PhaseTwo, PhaseTransitionOneEnded());
         At(PhaseTwo, PhaseTransition, PhaseTwoEnded());
         At(PhaseTransition, PhaseThree, PhaseTransitionTwoEnded());
 
-        stateMachine.SetState(PhaseOne);
+        switch (StageController.Instance.BossPhase)
+        {
+            case StageController.PhaseType.EnterPhase:
+                stateMachine.SetState(EnterPhase);
+                break;
+            case StageController.PhaseType.PhaseOne:
+                stateMachine.SetState(PhaseOne);
+                break;
+            case StageController.PhaseType.PhaseTwo:
+                stateMachine.SetState(PhaseTwo);
+                break;
+            case StageController.PhaseType.PhaseThree:
+                stateMachine.SetState(PhaseTwo);
+                break;
+            case StageController.PhaseType.PhaseTransition:
+                stateMachine.SetState(PhaseTransition);
+                break;
+        }
 
         void At(IState to, IState from, Func<bool> condition)
         {
             stateMachine.AddTransition(to, from, condition);
         }
 
+        Func<bool> EnterPhaseEnded() => () => EnterPhase.IsEntered;
         Func<bool> PhaseOneEnded() => () => currentLifePoint <= (maxLifePoint * 2 / 3);
         Func<bool> PhaseTransitionOneEnded() => () => (gameObject.transform.position == playingPosition && PhaseTransition.TransitionEnded);
         Func<bool> PhaseTwoEnded() => () => currentLifePoint <= (maxLifePoint * 1 / 3);

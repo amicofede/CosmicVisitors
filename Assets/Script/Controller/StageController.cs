@@ -1,10 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Pool;
-using static Unity.VisualScripting.Antlr3.Runtime.Tree.TreeWizard;
 
 public class StageController : Utility.MonoSingleton<StageController>
 {
@@ -12,6 +8,18 @@ public class StageController : Utility.MonoSingleton<StageController>
     public int Level { get { return level; } }
 
     public string[] VisitorArmy;
+
+    public PhaseType BossPhase;
+
+    public enum PhaseType
+    {
+        EnterPhase,
+        PhaseOne,
+        PhaseTwo,
+        PhaseThree,
+        PhaseTransition
+    }
+
 
     #region UnityMessages
     private void OnEnable()
@@ -37,7 +45,6 @@ public class StageController : Utility.MonoSingleton<StageController>
         level++;
         if (level > 3)
         {
-            level = 0;
             BossStage();
         }
         else
@@ -48,18 +55,11 @@ public class StageController : Utility.MonoSingleton<StageController>
                 case 1:
                     VisitorArmy = new string[]
                     {
-                        //"---#---",
-                        //"-------",
-                        //"-------",
-                        //"-------",
-                        //"-------",
-                        //"-------",
-                        //"-------",
                         "#######",
                         "-#####-",
                         "--###--",
                         "---#---",
-                        "-------",
+                        "-------"
                     };
                     ShuffleVisitorArmy();
                     EventController.RaiseOnBuildVisitorArmy();
@@ -68,18 +68,11 @@ public class StageController : Utility.MonoSingleton<StageController>
                 case 2:
                     VisitorArmy = new string[]
                     {
-                        //"---#---",
-                        //"-------",
-                        //"-------",
-                        //"-------",
-                        //"-------",
-                        //"-------",
-                        //"-------",
                         "##-#-##",
                         "-##-##-",
                         "--###--",
                         "-#-#-#-",
-                        "--###--",
+                        "--###--"
                     };
                     ShuffleVisitorArmy();
                     EventController.RaiseOnBuildVisitorArmy();
@@ -88,24 +81,14 @@ public class StageController : Utility.MonoSingleton<StageController>
                 case 3:
                     VisitorArmy = new string[]
                     {
-                        //"---#---",
-                        //"-------",
-                        //"-------",
-                        //"-------",
-                        //"-------",
-                        //"-------",
-                        //"-------",
-                        "-##-##-",
-                        "##-#-##",
-                        "-##-##-",
-                        "##-#-##",
-                        "-##-##-",
+                        "##--##-",
+                        "--##-##",
+                        "###----",
+                        "----###",
+                        "-#-#-#-"
                     };
                     ShuffleVisitorArmy();
                     EventController.RaiseOnBuildVisitorArmy();
-                    break;
-
-                case 4: // Boss
                     break;
             }
         }
@@ -120,6 +103,9 @@ public class StageController : Utility.MonoSingleton<StageController>
 
     public void BossStage()
     {
+        level = 0;
+        Debug.Log("remove comment");
+        //BossPhase = PhaseType.EnterPhase;
         EventController.RaiseOnBossSpawn();
     }
 

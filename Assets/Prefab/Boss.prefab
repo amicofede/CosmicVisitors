@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1043961445460785795
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1292082722658723515}
+  m_Layer: 6
+  m_Name: SolarBeam
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1292082722658723515
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043961445460785795}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6085859601701826745}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3382747011725085830
 GameObject:
   m_ObjectHideFlags: 0
@@ -218,6 +249,7 @@ Transform:
   - {fileID: 6376538374303275012}
   - {fileID: 4210143563003009868}
   - {fileID: 8102713698362321901}
+  - {fileID: 1292082722658723515}
   - {fileID: 8141465493193642504}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -345,7 +377,7 @@ Rigidbody2D:
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 6
 --- !u!95 &-2818646179213661683
 Animator:
   serializedVersion: 5
@@ -382,6 +414,7 @@ MonoBehaviour:
   cannonDx: {fileID: 6376538374303275012}
   cannonSx: {fileID: 4210143563003009868}
   OrbitCannon: {fileID: 8102713698362321901}
+  SolarBeam: {fileID: 0}
   shield: {fileID: 3382747011725085830}
   maxLifePoint: 0
   currentLifePoint: 0

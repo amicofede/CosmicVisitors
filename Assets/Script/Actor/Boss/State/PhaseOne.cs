@@ -4,14 +4,11 @@ using UnityEngine;
 
 public class PhaseOne : IState
 {
-    private BossAISM2 boss;
+    private BossAISM boss;
 
     private Transform cannonDx;
     private Transform cannonSx;
 
-
-    private Vector3 startPosition;
-    private Vector3 currentPosition;
     private Vector3 playingPosition;
 
     private float speed;
@@ -20,11 +17,10 @@ public class PhaseOne : IState
 
     private Rigidbody2D rigidBody2D;
 
-    public PhaseOne(BossAISM2 _boss, Rigidbody2D _rigidBody2D, Vector3 _startPosition, Vector3 _playingPosition, float _speed, float _timeBetweenShoot, Transform _cannonDx, Transform _cannonSx)
+    public PhaseOne(BossAISM _boss, Rigidbody2D _rigidBody2D, Vector3 _playingPosition, float _speed, float _timeBetweenShoot, Transform _cannonDx, Transform _cannonSx)
     {
         boss = _boss;
         rigidBody2D = _rigidBody2D;
-        startPosition = _startPosition;
         playingPosition = _playingPosition;
         speed = _speed;
         timeBetweenShoot = _timeBetweenShoot;
@@ -33,9 +29,7 @@ public class PhaseOne : IState
     }
     public void OnEnter()
     {
-        rigidBody2D.isKinematic = true;
-        shootCD = 0;
-        boss.gameObject.transform.position = startPosition;
+        boss.gameObject.transform.position = playingPosition;
     }
 
     public void OnExit()
@@ -44,21 +38,10 @@ public class PhaseOne : IState
 
     public void Tick()
     {
-        if (boss.gameObject.transform.position.y > playingPosition.y)
-        {
-            currentPosition = boss.gameObject.transform.position;
-            Vector2 movement = (playingPosition - currentPosition).normalized;
-            rigidBody2D.MovePosition((Vector2)currentPosition + movement * 1 * Time.fixedDeltaTime);
-        }
-        else
-        {
-            boss.gameObject.transform.position = new Vector3(boss.gameObject.transform.position.x, playingPosition.y, 0f);
-            rigidBody2D.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-            rigidBody2D.isKinematic = false;
-            EventController.RaiseOnSpaceshipEnableInput();
-            MoveHorizontal();
-            Shoot();
-        }
+        boss.gameObject.transform.position = new Vector3(boss.gameObject.transform.position.x, playingPosition.y, 0f);
+        EventController.RaiseOnSpaceshipEnableInput();
+        MoveHorizontal();
+        Shoot();
     }
 
 

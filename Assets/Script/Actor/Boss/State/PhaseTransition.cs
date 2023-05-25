@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PhaseTransition : IState
 {
-    private BossAISM2 boss;
+    private BossAISM boss;
 
     private Vector3 playingPosition;
     private Vector3 startPosition;
@@ -19,10 +19,10 @@ public class PhaseTransition : IState
     public bool TransitionEnded { get { return transitionEnded; } }
 
 
-    public PhaseTransition(BossAISM2 _boss, Vector3 _playingPositon, GameObject _shield, Rigidbody2D _rigidbody2D)
+    public PhaseTransition(BossAISM _boss, Vector3 _playingPosition, GameObject _shield, Rigidbody2D _rigidbody2D)
     {
         boss = _boss;
-        playingPosition = _playingPositon;
+        playingPosition = _playingPosition;
         shield = _shield;
         rigidBody2D = _rigidbody2D;
     }
