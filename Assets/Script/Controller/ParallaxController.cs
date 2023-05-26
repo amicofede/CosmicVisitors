@@ -21,7 +21,7 @@ public class ParallaxController: MonoBehaviour
             image.transform.Translate(Vector3.right * 1 * Time.deltaTime);
             if (image.rectTransform.position.y < 0)
             {
-                image.rectTransform.position = new Vector2(0, images.Count * 16f);
+                image.rectTransform.position = new Vector2(-4.5f, images.Count * 16f);
             }
         }
     }

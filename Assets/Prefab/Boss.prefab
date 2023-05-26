@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1043961445460785795}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 0, z: 0}
+  m_LocalPosition: {x: 4, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -415,6 +415,7 @@ MonoBehaviour:
   cannonSx: {fileID: 4210143563003009868}
   OrbitCannon: {fileID: 8102713698362321901}
   SolarBeam: {fileID: 1292082722658723515}
+  SolarBeamPrefab: {fileID: 8423948341271938313, guid: 5675f262b0ce0484ca5708b6de4340c8, type: 3}
   shield: {fileID: 3382747011725085830}
   maxLifePoint: 0
   currentLifePoint: 0

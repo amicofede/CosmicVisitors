@@ -15,6 +15,8 @@ public class BossAISM : MonoBehaviour, IDamageable
     [SerializeField] private Transform OrbitCannon;
     [Tooltip("Add an Empty Object children in the location of SolarBeam and link to this.")]
     [SerializeField] private Transform SolarBeam;
+    [Tooltip("Add the Prefab of the SolarBeam.")]
+    [SerializeField] private GameObject SolarBeamPrefab;
     [Tooltip("Add the Object children of the shield.")]
     [SerializeField] private GameObject shield;
 
@@ -54,7 +56,7 @@ public class BossAISM : MonoBehaviour, IDamageable
         var EnterPhase = new EnterPhase(this, rigidBody2D, startPosition, playingPosition);
         var PhaseOne = new PhaseOne(this, rigidBody2D, playingPosition, speed, timeBetweenShoot, cannonDx, cannonSx);
         var PhaseTwo = new PhaseTwo(this, rigidBody2D, playingPosition, OrbitCannon, spaceship);
-        var PhaseThree = new PhaseThree(this, rigidBody2D, playingPosition, SolarBeam, shield);
+        var PhaseThree = new PhaseThree(this, rigidBody2D, playingPosition, SolarBeam, SolarBeamPrefab, shield);
         var PhaseTransition = new PhaseTransition(this, playingPosition, shield, rigidBody2D);
 
         At(EnterPhase, PhaseOne, EnterPhaseEnded());
@@ -75,16 +77,14 @@ public class BossAISM : MonoBehaviour, IDamageable
                 stateMachine.SetState(PhaseTwo);
                 break;
             case StageController.PhaseType.PhaseThree:
-                stateMachine.SetState(PhaseTwo);
+                stateMachine.SetState(PhaseThree);
                 break;
             case StageController.PhaseType.PhaseTransition:
                 stateMachine.SetState(PhaseTransition);
                 break;
-            default:
-                stateMachine.SetState(EnterPhase);
-                break;
-
-
+            //default:
+            //    stateMachine.SetState(EnterPhase);
+            //    break;
         }
 
         void At(IState to, IState from, Func<bool> condition)

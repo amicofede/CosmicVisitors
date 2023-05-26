@@ -5,6 +5,8 @@ public class Factory : Utility.MonoSingleton<Factory>
 {
     [SerializeField] private GameObject laserPrefab;
     [Header("")]
+    [SerializeField] private GameObject solarBeamPrefab;
+    [Header("")]
     [SerializeField] private GameObject bossLaserPrefab;
     [SerializeField] private GameObject bossLaserOrbitPrefab;
     [Header("")]
@@ -15,6 +17,7 @@ public class Factory : Utility.MonoSingleton<Factory>
     [SerializeField] private GameObject returnFireBomberPrefab;
 
     private Utility.ObjectPool lasers;
+    private Utility.ObjectPool solarBeams;
     private Utility.ObjectPool bossLasers;
     private Utility.ObjectPool bossLasersOrbit;
     private Utility.ObjectPool returnFiresFighter;
@@ -30,6 +33,10 @@ public class Factory : Utility.MonoSingleton<Factory>
         GameObject lasersPool = new GameObject("LasersPool");
         lasersPool.transform.SetParent(gameObject.transform);
         lasers = new Utility.ObjectPool(laserPrefab, lasersPool.gameObject.transform, 10);
+
+        GameObject solarBeamsPool = new GameObject("SolarBeamsPool");
+        solarBeamsPool.transform.SetParent(gameObject.transform);
+        solarBeams = new Utility.ObjectPool(solarBeamPrefab, solarBeamsPool.gameObject.transform, 2);
 
         GameObject bossLasersPool = new GameObject("BossLasersPool");
         bossLasersPool.transform.SetParent(gameObject.transform);
@@ -61,6 +68,10 @@ public class Factory : Utility.MonoSingleton<Factory>
     public GameObject activateLaser()
     {
         return lasers.ActivateObject();
+    }
+    public GameObject activateSolarBeam()
+    {
+        return solarBeams.ActivateObject();
     }
     public GameObject activateBossLaser()
     {
@@ -106,6 +117,10 @@ public class Factory : Utility.MonoSingleton<Factory>
     public void deactiveLaser(GameObject _obj)
     {
         lasers.DeactiveObject(_obj);
+    }
+    public void deactiveSolarBeam(GameObject _obj)
+    {
+        solarBeams.DeactiveObject(_obj);
     }
     public void deactiveBossLaser(GameObject _obj)
     {

@@ -11,30 +11,34 @@ public class PhaseThree : IState
     private Vector3 nextSolarPosition;
     private int randomPosition;
 
+    private Transform SolarLocation;
+
+    private GameObject solarBeam;
+    private GameObject solarBeamPrefab;
     private GameObject shield;
 
     private Rigidbody2D rigidBody2D;
 
     private bool isSolarShooting;
-    //private float particleBeamTimer;
+    private bool isBeamFinished;
 
-    public PhaseThree(BossAISM _boss, Rigidbody2D _rigidbody2D, Vector3 _playingPosition, Transform _solarBeam, GameObject _shield)
+    public PhaseThree(BossAISM _boss, Rigidbody2D _rigidbody2D, Vector3 _playingPosition, Transform _solarBeam, GameObject _solarBeamPrefab, GameObject _shield)
     {
         boss = _boss;
         playingPosition = _playingPosition;
+        SolarLocation = _solarBeam;
+        solarBeamPrefab = _solarBeamPrefab;
         shield = _shield;
         rigidBody2D = _rigidbody2D;
-
     }
     public void OnEnter()
     {
         EventController.RaiseOnSpaceshipEnableInput();
         isSolarShooting = false;
         boss.gameObject.transform.position = playingPosition;
-        shield.SetActive(false);
+        shield.SetActive(true);
         randomPosition = Random.Range(0, 1) * 2 - 1;
-        nextSolarPosition = new Vector3(randomPosition * Random.Range(0f, 3f), 13f, 0f);
-        //particleBeamTimer = 0.5f;
+        nextSolarPosition = new Vector3(2 * randomPosition, 13, 0);
     }
 
     public void OnExit()
@@ -45,7 +49,7 @@ public class PhaseThree : IState
     {
         if (!isSolarShooting)
         {
-            QuickMove();
+            SlowMove();
         }
         else
         {
@@ -53,40 +57,55 @@ public class PhaseThree : IState
         }
     }
 
-    public void QuickMove()
+    public void SlowMove()
     {
         if (nextSolarPosition.x < 0)
         {
             if (boss.gameObject.transform.position.x > nextSolarPosition.x)
             {
+                shield.SetActive(true);
                 rigidBody2D.MovePosition(boss.gameObject.transform.position + (Vector3)Vector2.left * 20 * Time.fixedDeltaTime);
             }
             else
             {
+                solarBeam = Factory.Instance.activateSolarBeam();
+                SetNextSolarPosition();
                 isSolarShooting = true;
-                randomPosition = -randomPosition;
-                nextSolarPosition = new Vector3(randomPosition * Random.Range(0f, 3f), 13f, 0f);
-                shield.SetActive(true);
             }
         }
         else
         {
             if (boss.gameObject.transform.position.x < nextSolarPosition.x)
             {
+                shield.SetActive(true);
                 rigidBody2D.MovePosition(boss.gameObject.transform.position + (Vector3)Vector2.right * 20 * Time.fixedDeltaTime);
             }
             else
             {
+                SetNextSolarPosition();
+                solarBeam = Factory.Instance.activateSolarBeam();
                 isSolarShooting = true;
-                randomPosition = -randomPosition;
-                nextSolarPosition = new Vector3(randomPosition * Random.Range(0f, 3f), 13f, 0f);
-                shield.SetActive(true);
             }
         }
     }
 
+    public void SetNextSolarPosition()
+    {
+        randomPosition = -randomPosition;
+        nextSolarPosition = new Vector3(2 * randomPosition, 13, 0);
+        shield.SetActive(false);
+    }
+
     public void SolarBeamShoot()
     {
-
+        //if (solarBeam.activeSelf == false)
+        //{
+        //    isSolarShooting = false;
+        //}
+        //else
+        //{
+            solarBeam.transform.position = SolarLocation.position;
+            solarBeam.transform.rotation = Quaternion.Euler(0 , 0, -90);
+        //}
     }
 }
