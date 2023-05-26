@@ -18,10 +18,10 @@ public class ParallaxController: MonoBehaviour
     {
         foreach (var image in images)
         {
-            image.transform.Translate(Vector3.right * 100 * Time.deltaTime);
+            image.transform.Translate(Vector3.right * 1 * Time.deltaTime);
             if (image.rectTransform.position.y < 0)
             {
-                image.rectTransform.position = new Vector2(0, images.Count * 1920f);
+                image.rectTransform.position = new Vector2(0, images.Count * 16f);
             }
         }
     }
@@ -31,7 +31,7 @@ public class ParallaxController: MonoBehaviour
     {
         for (int i = 0; i < images.Count; i++)
         {
-            images[i].rectTransform.sizeDelta = new Vector2(Screen.height, Screen.width);
+            images[i].rectTransform.sizeDelta = new Vector2(16, 9);
         }
     }
 
@@ -39,7 +39,7 @@ public class ParallaxController: MonoBehaviour
     {
         for (int i = 0; i < images.Count; i++)
         {
-            images[i].rectTransform.position = new Vector3(0f, (1920f + i * Screen.height), 0f);
+            images[i].rectTransform.position = new Vector3(-4.5f, (16 + i * 16), 0f);
         }
     }
 

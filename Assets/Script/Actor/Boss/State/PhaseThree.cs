@@ -16,7 +16,7 @@ public class PhaseThree : IState
     private Rigidbody2D rigidBody2D;
 
     private bool isSolarShooting;
-    private float particleBeamTimer;
+    //private float particleBeamTimer;
 
     public PhaseThree(BossAISM _boss, Rigidbody2D _rigidbody2D, Vector3 _playingPosition, Transform _solarBeam, GameObject _shield)
     {
@@ -34,7 +34,7 @@ public class PhaseThree : IState
         shield.SetActive(false);
         randomPosition = Random.Range(0, 1) * 2 - 1;
         nextSolarPosition = new Vector3(randomPosition * Random.Range(0f, 3f), 13f, 0f);
-        particleBeamTimer = 0.5f;
+        //particleBeamTimer = 0.5f;
     }
 
     public void OnExit()

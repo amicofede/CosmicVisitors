@@ -80,6 +80,11 @@ public class BossAISM : MonoBehaviour, IDamageable
             case StageController.PhaseType.PhaseTransition:
                 stateMachine.SetState(PhaseTransition);
                 break;
+            default:
+                stateMachine.SetState(EnterPhase);
+                break;
+
+
         }
 
         void At(IState to, IState from, Func<bool> condition)
