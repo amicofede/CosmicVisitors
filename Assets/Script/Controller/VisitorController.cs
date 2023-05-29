@@ -22,7 +22,6 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
 
     private bool armySpawned;
 
-
     public const char VisitorShip = '#';
     public const char EmptyShip = '-';
 
@@ -47,6 +46,7 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
         EventController.BossSpawn += SpawnBoss;
 
         EventController.RestartGameUI += ClearVisitorArmy;
+        EventController.RestartGameUI += DisableAI;
         EventController.GameOverUI += DisableAI;
     }
     private void OnDisable()
@@ -56,10 +56,10 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
         EventController.PauseGameUI -= DisableAI;
         EventController.ResumeGameUI -= EnableAI;
 
-
         EventController.BossSpawn -= SpawnBoss;
 
         EventController.RestartGameUI -= ClearVisitorArmy;
+        EventController.RestartGameUI -= DisableAI;
         EventController.GameOverUI -= DisableAI;
     }
     #endregion
@@ -80,13 +80,16 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
     }
     private bool IsOneVisitorActive()
     {
-        for (int i = 0; i < visitors.Length; i++)
+        if(armySpawned)
         {
-            if (visitors[i].gameObject.activeInHierarchy)
-                return true;
+            for (int i = 0; i < visitors.Length; i++)
+            {
+                if (visitors[i].gameObject.activeInHierarchy)
+                    return true;
+            }
+            DisableAI();
+            EventController.RaiseOnStageComplete();
         }
-        DisableAI();
-        EventController.RaiseOnStageComplete();
         armySpawned = false;
         return false;
     }
@@ -95,7 +98,6 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
         activeVisitors.Remove(_visitor);
         SetSpeed();
         EventController.RaiseOnVisitorKilled();
-
     }
     #endregion
 
@@ -147,8 +149,11 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
         {
             visitors[i].OnKill();
         }
+        Debug.Log("clear");
+        DisableAI();
         activeVisitors.Clear();
         visitors = new Visitor[0];
+        armySpawned = false;
     }
     private void BuildVisitorArmy()
     {
