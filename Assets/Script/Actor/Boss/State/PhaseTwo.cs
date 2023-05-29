@@ -74,7 +74,6 @@ public class PhaseTwo : IState
                 isOrbitShooting = true;
                 randomPosition = -randomPosition;
                 nextOrbitPosition = new Vector3(randomPosition * Random.Range(0f, 3f), 13f, 0f);
-                Debug.Log(nextOrbitPosition);
             }
         }
         else

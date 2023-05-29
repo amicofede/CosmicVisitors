@@ -92,6 +92,7 @@ public class GameManager : Utility.MonoSingleton<GameManager>
         Time.timeScale = 1;
         gameState = State.Playing;
         GameObject player = Instantiate(SpaceshipPrefab);
+        EventController.RaiseOnSetStage();
         EventController.RaiseOnSpaceshipSpawn();
         EventController.RaiseOnPlayingUI();
     }

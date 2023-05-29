@@ -14,6 +14,11 @@ public class StageController : Utility.MonoSingleton<StageController>
     private int noOfBossDefeated;
     public int NoOfBossDefeated { get { return noOfBossDefeated; } }
 
+    [SerializeField]
+    private bool isBossFight;
+    public bool IsBossFight { get { return isBossFight; } }
+
+
     public string[] VisitorArmy;
 
     public PhaseType BossPhase;
@@ -35,6 +40,7 @@ public class StageController : Utility.MonoSingleton<StageController>
         EventController.GenerateStage += OnStageGenerate;
         EventController.RestartGameUI += RestartGame;
         EventController.BossDeath += BossDead;
+        EventController.SetStage += SetStage;
     }
 
     private void OnDisable()
@@ -42,6 +48,7 @@ public class StageController : Utility.MonoSingleton<StageController>
         EventController.GenerateStage -= OnStageGenerate;
         EventController.RestartGameUI -= RestartGame;
         EventController.BossDeath -= BossDead;
+        EventController.SetStage -= SetStage;
     }
     #endregion
 
@@ -50,18 +57,32 @@ public class StageController : Utility.MonoSingleton<StageController>
         level = 0;
         stage = 0;
         noOfBossDefeated = 0;
+        isBossFight = false;
     }
 
-    public void OnStageGenerate()
+    private void SetStage()
     {
         level++;
         stage++;
         if (level > 3)
         {
+            isBossFight = true;
+        }
+        else
+        {
+            isBossFight = false;
+        }
+    }
+
+    public void OnStageGenerate()
+    {
+        if (isBossFight)
+        {
             BossStage();
         }
         else
         {
+            isBossFight = false;
             int random = UnityEngine.Random.Range(1, 3);
             switch (random)
             {

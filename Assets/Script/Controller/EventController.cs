@@ -41,6 +41,7 @@ public class EventController : Utility.MonoSingleton<EventController>
     public static event Action GenerateStage;
     public static event Action StageComplete;
     public static event Action ClearStage;
+    public static event Action SetStage;
 
 
     #region Visitor
@@ -178,6 +179,10 @@ public class EventController : Utility.MonoSingleton<EventController>
     public static void RaiseOnStageComplete()
     {
         StageComplete?.Invoke();
+    }
+    public static void RaiseOnSetStage()
+    {
+        SetStage?.Invoke();
     }
     #endregion
 }

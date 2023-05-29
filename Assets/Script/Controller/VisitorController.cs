@@ -20,6 +20,8 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
     private float maxFireRate;
     private float fireRate;
 
+    private bool armySpawned;
+
 
     public const char VisitorShip = '#';
     public const char EmptyShip = '-';
@@ -28,6 +30,7 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
     private new void Awake()
     {
         base.Awake();
+        armySpawned = false;
         direction = new Vector2Int((UnityEngine.Random.Range(0, 1) * 2 -1), 0);
         maxSpeed = 3f;
         maxFireRate = 50f;
@@ -64,7 +67,7 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
     #region AI
     private void EnableAI()
     {
-        if (StageController.Instance.Stage % 4 != 0)
+        if (!StageController.Instance.IsBossFight && armySpawned)
         {
             StartCoroutine(ReturnFire());
             StartCoroutine(MoveHorizontal());
@@ -84,6 +87,7 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
         }
         DisableAI();
         EventController.RaiseOnStageComplete();
+        armySpawned = false;
         return false;
     }
     public void OnVisitorKilled(GameObject _visitor)
@@ -148,6 +152,7 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
     }
     private void BuildVisitorArmy()
     {
+        armySpawned = false;
         DisableAI();
         activeVisitors.Clear();
         visitors = new Visitor[0];
@@ -187,6 +192,7 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
             activeVisitors.Add(visitors[i].gameObject);
         }
         yield return new WaitForSeconds(1f);
+        armySpawned = true;
         SetSpeed();
         EventController.RaiseOnSpaceshipEnableInput();
         EnableAI();
