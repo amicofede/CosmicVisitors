@@ -49,7 +49,7 @@ public class BossAISM : MonoBehaviour, IDamageable
         timeBetweenShoot = 0.75f;
 
         maxLifePoint = 100;
-        currentLifePoint = 36;//maxLifePoint;
+        currentLifePoint = maxLifePoint;
 
         shield.SetActive(false);
 
@@ -129,12 +129,15 @@ public class BossAISM : MonoBehaviour, IDamageable
         currentLifePoint--;
         if (currentLifePoint <= 0)
         {
+
             OnKill();
         }
     }
 
     public void OnKill()
     {
+        EventController.RaiseOnBossDeath();
+        EventController.RaiseOnStageComplete();
         Destroy(gameObject);
     }
     #endregion

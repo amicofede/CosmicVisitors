@@ -89,8 +89,9 @@ public class UIController : Utility.MonoSingleton<UIController>
         gameOverUI.SetActive(true);
         pauseMenuUI.SetActive(false);
         stageCompleteUI.SetActive(false);
-        gameOverStatistics.text = "Your reach the Stage n. " + StageController.Instance.Level + "."+
-                                  "\nYour total Score is " + GameManager.Instance.Score + ".";
+        gameOverStatistics.text = "You reach the Stage n. " + (StageController.Instance.Stage - 1) + "." +
+                                  "\nYour total Score is " + GameManager.Instance.Score + "." +
+                                  "\nYou defeat " + StageController.Instance.NoOfBossDefeated + " Boss.";
 
     }
     private void PauseMenuUI()
@@ -108,7 +109,14 @@ public class UIController : Utility.MonoSingleton<UIController>
         gameOverUI.SetActive(false);
         pauseMenuUI.SetActive(false);
         stageCompleteUI.SetActive(true);
-        stageComplete.text = "Stage " + StageController.Instance.Level + "\nComplete!";
+        if (StageController.Instance.Stage % 4 == 0)
+        {
+            stageComplete.text = "Boss Stage\nComplete!";
+        }
+        else
+        {
+            stageComplete.text = "Stage " + (StageController.Instance.Stage) + "\nComplete!";
+        }
     }
     #endregion
 }

@@ -64,13 +64,14 @@ public class PhaseThree : IState
             if (boss.gameObject.transform.position.x > nextSolarPosition.x)
             {
                 shield.SetActive(true);
-                rigidBody2D.MovePosition(boss.gameObject.transform.position + (Vector3)Vector2.left * 20 * Time.fixedDeltaTime);
+                rigidBody2D.MovePosition(boss.gameObject.transform.position + (Vector3)Vector2.left * 1 * Time.fixedDeltaTime);
             }
             else
             {
-                solarBeam = Factory.Instance.activateSolarBeam();
-                SetNextSolarPosition();
                 isSolarShooting = true;
+                SetNextSolarPosition();
+                solarBeam = Factory.Instance.activateSolarBeam();
+                solarBeam.SetActive(true);
             }
         }
         else
@@ -78,13 +79,14 @@ public class PhaseThree : IState
             if (boss.gameObject.transform.position.x < nextSolarPosition.x)
             {
                 shield.SetActive(true);
-                rigidBody2D.MovePosition(boss.gameObject.transform.position + (Vector3)Vector2.right * 20 * Time.fixedDeltaTime);
+                rigidBody2D.MovePosition(boss.gameObject.transform.position + (Vector3)Vector2.right * 1 * Time.fixedDeltaTime);
             }
             else
             {
+                isSolarShooting = true;
                 SetNextSolarPosition();
                 solarBeam = Factory.Instance.activateSolarBeam();
-                isSolarShooting = true;
+                solarBeam.SetActive(true);
             }
         }
     }
@@ -98,14 +100,14 @@ public class PhaseThree : IState
 
     public void SolarBeamShoot()
     {
-        //if (solarBeam.activeSelf == false)
-        //{
-        //    isSolarShooting = false;
-        //}
-        //else
-        //{
+        if (solarBeam.activeSelf == false)
+        {
+            isSolarShooting = false;
+        }
+        else
+        {
             solarBeam.transform.position = SolarLocation.position;
             solarBeam.transform.rotation = Quaternion.Euler(0 , 0, -90);
-        //}
+        }
     }
 }

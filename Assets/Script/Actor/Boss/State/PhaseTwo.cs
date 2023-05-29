@@ -103,6 +103,7 @@ public class PhaseTwo : IState
             BossLaserOrbit.transform.position = new Vector3(orbitCannon.transform.position.x + orbitLaserInGame, orbitCannon.transform.position.y, orbitCannon.transform.position.z);
             orbitLasers.Add(BossLaserOrbit.GetComponent<Laser>());
             BossLaserOrbit.SetActive(true);
+            EventController.RaiseOnBossLaserPhaseTwo();
         }
         else
         {

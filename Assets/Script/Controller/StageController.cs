@@ -7,9 +7,17 @@ public class StageController : Utility.MonoSingleton<StageController>
     [SerializeField] private int level = 0;
     public int Level { get { return level; } }
 
+    [SerializeField] private int stage = 0;
+    public int Stage { get { return stage; } }
+
+    [SerializeField]
+    private int noOfBossDefeated;
+    public int NoOfBossDefeated { get { return noOfBossDefeated; } }
+
     public string[] VisitorArmy;
 
     public PhaseType BossPhase;
+
 
     public enum PhaseType
     {
@@ -26,23 +34,28 @@ public class StageController : Utility.MonoSingleton<StageController>
     {
         EventController.GenerateStage += OnStageGenerate;
         EventController.RestartGameUI += RestartGame;
+        EventController.BossDeath += BossDead;
     }
 
     private void OnDisable()
     {
         EventController.GenerateStage -= OnStageGenerate;
         EventController.RestartGameUI -= RestartGame;
+        EventController.BossDeath -= BossDead;
     }
     #endregion
 
     private void RestartGame()
     {
         level = 0;
+        stage = 0;
+        noOfBossDefeated = 0;
     }
 
     public void OnStageGenerate()
     {
         level++;
+        stage++;
         if (level > 3)
         {
             BossStage();
@@ -101,12 +114,16 @@ public class StageController : Utility.MonoSingleton<StageController>
         Array.Sort(keys, VisitorArmy);
     }
 
-    public void BossStage()
+    private void BossStage()
     {
         level = 0;
-        Debug.Log("remove comment");
-        //BossPhase = PhaseType.EnterPhase;
+        BossPhase = PhaseType.EnterPhase;
         EventController.RaiseOnBossSpawn();
+    }
+
+    private void BossDead()
+    {
+        noOfBossDefeated = stage / 4;
     }
 
 }

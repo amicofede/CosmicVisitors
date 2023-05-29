@@ -11,10 +11,15 @@ public class EventController : Utility.MonoSingleton<EventController>
     public static event Action BuildVisitorArmy;
 
     public static event Action BossSpawn;
+    public static event Action BossDeath;
+    public static event Action BossLaserPhaseTwo;
+    public static event Action BossSolarBeamCharge;
+    public static event Action BossSolarBeamShoot;
 
     public static event Action SpaceshipSpawn;
     public static event Action SpaceshipDisableInput;
     public static event Action SpaceshipEnableInput;
+    public static event Action SpaceshipShooted;
     public static event Action<InputAction.CallbackContext> SpaceshipMoveStarted;
     public static event Action<InputAction.CallbackContext> SpaceshipMoveFinished;
     public static event Action<InputAction.CallbackContext> SpaceshipShoot;
@@ -60,6 +65,24 @@ public class EventController : Utility.MonoSingleton<EventController>
         BossSpawn?.Invoke();
     }
 
+    public static void RaiseOnBossDeath()
+    {
+        BossDeath?.Invoke();
+    }
+
+    public static void RaiseOnBossLaserPhaseTwo()
+    {
+        BossLaserPhaseTwo?.Invoke();
+    }
+    public static void RaiseOnBossSolarBeamCharge()
+    {
+        BossSolarBeamCharge?.Invoke();
+    }
+    public static void RaiseOnBossSolarBeamShoot()
+    {
+        BossSolarBeamShoot?.Invoke();
+    }
+
     #endregion
 
     #region SpaceShip
@@ -75,6 +98,10 @@ public class EventController : Utility.MonoSingleton<EventController>
     public static void RaiseOnSpaceshipSpawn()
     {
         SpaceshipSpawn?.Invoke();
+    }
+    public static void RaiseOnSpaceshipShooted()
+    {
+        SpaceshipShooted?.Invoke();
     }
 
 
@@ -150,7 +177,6 @@ public class EventController : Utility.MonoSingleton<EventController>
 
     public static void RaiseOnStageComplete()
     {
-        Debug.Log("StageCleared");
         StageComplete?.Invoke();
     }
     #endregion

@@ -35,6 +35,7 @@ public class InputController : Utility.MonoSingleton<InputController>
         shieldAction.started += OnShield;
 
         pauseGame.started += OnPause;
+        pauseGame.Enable();
     }
 
     private void OnDisable()
@@ -49,8 +50,7 @@ public class InputController : Utility.MonoSingleton<InputController>
         shieldAction.started -= OnShield;
 
         pauseGame.started -= OnPause;
-
-
+        pauseGame.Disable();
     }
     #endregion
 
@@ -58,14 +58,12 @@ public class InputController : Utility.MonoSingleton<InputController>
     #region Inputs
     private void EnableInputs()
     {
-        pauseGame.Enable();
         moveAction.Enable();
         shootAction.Enable();
         shieldAction.Enable();
     }
     private void DisableInputs()
     {
-        pauseGame.Disable();
         moveAction.Disable();
         shootAction.Disable();
         shieldAction.Disable();
@@ -101,7 +99,6 @@ public class InputController : Utility.MonoSingleton<InputController>
     #region UI
     private void OnPause(InputAction.CallbackContext _context)
     {
-
         if (IsPlaying)
         {
             IsPlaying = false;
@@ -110,6 +107,7 @@ public class InputController : Utility.MonoSingleton<InputController>
         }
         else
         {
+            IsPlaying = true;
             EnableInputs();
             EventController.RaiseOnResumeGameUI();
         }

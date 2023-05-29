@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Playables;
 using UnityEngine;
 
 public class GameManager : Utility.MonoSingleton<GameManager>
@@ -77,7 +74,6 @@ public class GameManager : Utility.MonoSingleton<GameManager>
     private void OnScoreAdded()
     {
         Score++;
-        //Debug.Log("Score: " + score);
     }
     #endregion
 
@@ -89,13 +85,12 @@ public class GameManager : Utility.MonoSingleton<GameManager>
     }
     public void StartStage()
     {
-        if (StageController.Instance.Level == 0)
+        if (StageController.Instance.Stage == 0)
         {
             Score = 0;
         }
         Time.timeScale = 1;
         gameState = State.Playing;
-        Debug.Log(gameState);
         GameObject player = Instantiate(SpaceshipPrefab);
         EventController.RaiseOnSpaceshipSpawn();
         EventController.RaiseOnPlayingUI();
@@ -110,7 +105,7 @@ public class GameManager : Utility.MonoSingleton<GameManager>
         Time.timeScale = 0;
         gameState = State.Pause;
     }
-    private void OnResumeGame()
+    public void OnResumeGame()
     {
         Time.timeScale = 1;
         gameState = State.Playing;

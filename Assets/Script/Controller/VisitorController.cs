@@ -29,7 +29,7 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
     {
         base.Awake();
         direction = new Vector2Int((UnityEngine.Random.Range(0, 1) * 2 -1), 0);
-        maxSpeed = 5f;
+        maxSpeed = 3f;
         maxFireRate = 50f;
         visitors = GetComponentsInChildren<Visitor>();
         activeVisitors = new List<GameObject>();
@@ -38,11 +38,11 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
     {
         EventController.VisitorHitBounds += ChangeDirection;
         EventController.BuildVisitorArmy += BuildVisitorArmy;
+        EventController.PauseGameUI += DisableAI;
+        EventController.ResumeGameUI += EnableAI;
 
         EventController.BossSpawn += SpawnBoss;
 
-        EventController.PauseGameUI += DisableAI;
-        EventController.ResumeGameUI += EnableAI;
         EventController.RestartGameUI += ClearVisitorArmy;
         EventController.GameOverUI += DisableAI;
     }
@@ -50,11 +50,12 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
     {
         EventController.VisitorHitBounds -= ChangeDirection;
         EventController.BuildVisitorArmy -= BuildVisitorArmy;
+        EventController.PauseGameUI -= DisableAI;
+        EventController.ResumeGameUI -= EnableAI;
+
 
         EventController.BossSpawn -= SpawnBoss;
 
-        EventController.PauseGameUI -= DisableAI;
-        EventController.ResumeGameUI -= EnableAI;
         EventController.RestartGameUI -= ClearVisitorArmy;
         EventController.GameOverUI -= DisableAI;
     }
@@ -63,13 +64,16 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
     #region AI
     private void EnableAI()
     {
-        StartCoroutine(ReturnFire());
-        StartCoroutine(MoveHorizontal());
+        if (StageController.Instance.Stage % 4 != 0)
+        {
+            StartCoroutine(ReturnFire());
+            StartCoroutine(MoveHorizontal());
+        }
     }
     private void DisableAI()
     {
-        Debug.Log("Disabled visitor");
-        StopAllCoroutines();
+        StopCoroutine(ReturnFire());
+        StopCoroutine(MoveHorizontal());
     }
     private bool IsOneVisitorActive()
     {
@@ -79,7 +83,6 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
                 return true;
         }
         DisableAI();
-        //ClearVisitorArmy();
         EventController.RaiseOnStageComplete();
         return false;
     }
@@ -96,7 +99,6 @@ public class VisitorController : Utility.MonoSingleton<VisitorController>
     private void SetSpeed()
     {
         speed = 1f + (maxSpeed * (1f - (((float)activeVisitors.Count) / (float)visitors.Length)));
-        //speed = maxSpeed - (activeVisitors.Count / 10f) - 1;
         if (speed <= 0)
         {
             speed = 1;

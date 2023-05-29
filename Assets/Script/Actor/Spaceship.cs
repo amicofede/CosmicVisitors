@@ -100,6 +100,23 @@ public class Spaceship : MonoBehaviour, IDamageable
             OnTakeDamage();
         }
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.GetComponentInParent<SolarBeam>() && !IsShieldUP)
+        {
+            Debug.Log("Hitted");
+            OnTakeDamage();
+            if (lifePoint > 0)
+            {
+                OnTakeDamage();
+            }
+        }
+        else
+        {
+            shield.SetActive(false);
+            IsShieldUP = false;
+        }
+    }
     #endregion
 
     #region Movement
@@ -134,6 +151,7 @@ public class Spaceship : MonoBehaviour, IDamageable
     {
         if (!shooted)
         {
+            EventController.RaiseOnSpaceshipShooted();
             shooted = true;
             GameObject laserShooted1 = Factory.Instance.activateLaser();
             GameObject laserShooted2 = Factory.Instance.activateLaser();
